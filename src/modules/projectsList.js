@@ -42,4 +42,6 @@ class ProjectsList {
     }
 }
 
-export { ProjectsList }
+const list = new ProjectsList()
+
+export { list }
