@@ -1,9 +1,11 @@
+import { list } from "./projects-list";
+
 class Task {
     #project;
     #id;
     #isComplete;
 
-    constructor(title, desc, dueDate, prio, project) {
+    constructor(title, desc, dueDate, prio, project=list.getAllProjects()[0]) {
         this.title = title;
         this.desc = desc;
         this.dueDate = dueDate;

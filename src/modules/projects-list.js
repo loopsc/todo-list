@@ -42,6 +42,13 @@ class ProjectsList {
     }
 }
 
+
+// Export the singleton instance of ProjectsList
+// Ensures that only one ProjectsList can be created.
 const list = new ProjectsList()
+
+// Add a default project to the list
+const defaultProject = new Projects("Default")
+list.addProject(defaultProject)
 
 export { list }

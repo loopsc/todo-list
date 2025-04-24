@@ -1,0 +1,138 @@
+export default function addTaskDialog() {
+    // Create the dialog element
+    const dialog = document.createElement("dialog");
+    dialog.classList.add("dialog");
+    dialog.setAttribute("open", "");
+
+    // Create the form element
+    const form = document.createElement("form");
+    form.classList.add("form");
+    form.setAttribute("method", "dialog");
+
+    // Create Task name Section
+    const taskGroup = document.createElement("div");
+    taskGroup.classList.add("form-group");
+
+    const taskLabel = document.createElement("label");
+    taskLabel.setAttribute("for", "task");
+    taskLabel.textContent = "Task:";
+    taskGroup.appendChild(taskLabel);
+
+    const taskName = document.createElement("input");
+    taskName.setAttribute("type", "text");
+    taskName.setAttribute("name", "task");
+    taskName.setAttribute("id", "task");
+    taskName.setAttribute("required", "");
+    taskGroup.appendChild(taskName);
+
+    // Append task group to form
+    form.appendChild(taskGroup);
+
+    // Create Description Textarea Section
+    const descGroup = document.createElement("div");
+    descGroup.classList.add("form-group");
+
+    const descLabel = document.createElement("label");
+    descLabel.setAttribute("for", "desc");
+    descLabel.textContent = "Description:";
+    descGroup.appendChild(descLabel);
+
+    const descTextarea = document.createElement("textarea");
+    descTextarea.setAttribute("name", "desc");
+    descTextarea.setAttribute("id", "desc");
+    descGroup.appendChild(descTextarea);
+
+    // Append description group to form
+    form.appendChild(descGroup);
+
+    // Create Due Date Input Section
+    const dueGroup = document.createElement("div");
+    dueGroup.classList.add("form-group");
+
+    const dueLabel = document.createElement("label");
+    dueLabel.setAttribute("for", "due");
+    dueLabel.textContent = "Due Date:";
+    dueGroup.appendChild(dueLabel);
+
+    const dueInput = document.createElement("input");
+    dueInput.setAttribute("type", "date");
+    dueInput.setAttribute("name", "due");
+    dueInput.setAttribute("id", "due");
+    dueInput.setAttribute("required", "");
+    dueGroup.appendChild(dueInput);
+
+    // Append due group to form
+    form.appendChild(dueGroup);
+
+    // Create Priority Select Section
+    const priorityGroup = document.createElement("div");
+    priorityGroup.classList.add("form-group");
+
+    const priorityLabel = document.createElement("label");
+    priorityLabel.setAttribute("for", "priority");
+    priorityLabel.textContent = "Priority:";
+    priorityGroup.appendChild(priorityLabel);
+
+    const prioritySelect = document.createElement("select");
+    prioritySelect.setAttribute("id", "priority");
+    prioritySelect.setAttribute("name", "priority");
+    prioritySelect.setAttribute("required", "");
+
+    const optionDefault = document.createElement("option");
+    optionDefault.setAttribute("value", "");
+    optionDefault.textContent = "--Select--";
+    prioritySelect.appendChild(optionDefault);
+
+    for (let i = 1; i <= 5; i++) {
+        const option = document.createElement("option");
+        option.setAttribute("value", i);
+        option.textContent = i;
+        prioritySelect.appendChild(option);
+    }
+
+    // Append priority group to form
+    priorityGroup.appendChild(prioritySelect);
+    form.appendChild(priorityGroup);
+
+    // Create Button Group
+    const buttonGroup = document.createElement("div");
+    buttonGroup.classList.add("button-group");
+
+    // Create Cancel Button
+    const cancelButton = document.createElement("button");
+    cancelButton.classList.add("form-button");
+    cancelButton.textContent = "Cancel";
+    buttonGroup.appendChild(cancelButton);
+
+    cancelButton.addEventListener("click", (e) => {
+        e.preventDefault();
+
+        form.reset();
+        dialog.close();
+        dialog.remove();
+    });
+
+    // Create Submit Button
+    const submitButton = document.createElement("button");
+    submitButton.classList.add("form-button");
+    submitButton.setAttribute("type", "submit");
+    submitButton.textContent = "Submit";
+    buttonGroup.appendChild(submitButton);
+
+    // Append button group to form
+    form.appendChild(buttonGroup);
+
+    // Append form to dialog
+    dialog.appendChild(form);
+
+    return {
+        dialog,
+        form,
+        inputs: {
+            taskName,
+            descTextarea,
+            dueInput,
+            prioritySelect,
+        },
+    };
+}
