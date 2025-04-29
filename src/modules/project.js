@@ -1,4 +1,4 @@
-class Projects {
+class Project {
     #id
     #tasksList
 
@@ -33,4 +33,4 @@ class Projects {
     }
 }
 
-export { Projects }
+export { Project }

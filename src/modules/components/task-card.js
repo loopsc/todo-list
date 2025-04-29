@@ -1,3 +1,10 @@
+import { Task } from "../task";
+
+/**
+ * 
+ * @param {Task} task - A Task object
+ * @returns a rendered card onto the DOM
+ */
 export default function createTaskCard(task) {
     const card = document.createElement("div");
     card.classList.add("task-div");

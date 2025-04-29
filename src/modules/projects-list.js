@@ -1,8 +1,7 @@
-import { Projects } from "./projects";
+import { Project } from "./project";
 
 class ProjectsList {
-
-    #projectsList
+    #projectsList;
 
     constructor() {
         this.#projectsList = [];
@@ -10,17 +9,15 @@ class ProjectsList {
 
     addProject(projectToAdd) {
         // Checks if an object with that name already exists.
-        if (!this.getProjectByName(projectToAdd.name)){
-            this.#projectsList.push(projectToAdd)
+        if (!this.getProjectByName(projectToAdd.name)) {
+            this.#projectsList.push(projectToAdd);
+        } else {
+            console.log(`Project '${projectToAdd.name}' already exists`);
         }
-        else {
-            console.log(`Project '${projectToAdd.name}' already exists`)
-        }
-        
     }
 
     removeProject(project) {
-        const projectID = project.id
+        const projectID = project.id;
         for (let i = 0; i < this.#projectsList.length; i++) {
             if (this.#projectsList[i].id === projectID) {
                 this.#projectsList.splice(i, 1);
@@ -30,7 +27,9 @@ class ProjectsList {
 
     // Returns a project object with the corresponding name
     getProjectByName(projectName) {
-        return this.#projectsList.find(project => project.name === projectName)
+        return this.#projectsList.find(
+            (project) => project.name === projectName
+        );
     }
 
     getAllProjects() {
@@ -42,13 +41,12 @@ class ProjectsList {
     }
 }
 
-
 // Export the singleton instance of ProjectsList
 // Ensures that only one ProjectsList can be created.
-const list = new ProjectsList()
+const list = new ProjectsList();
 
 // Add a default project to the list
-const defaultProject = new Projects("Default")
-list.addProject(defaultProject)
+const defaultProject = new Project("Default");
+list.addProject(defaultProject);
 
-export { list }
+export { list };
