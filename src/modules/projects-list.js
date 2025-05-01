@@ -27,9 +27,11 @@ class ProjectsList {
 
     // Returns a project object with the corresponding name
     getProjectByName(projectName) {
-        return this.#projectsList.find(
-            (project) => project.name === projectName
-        );
+        return this.#projectsList.find((project) => project.name === projectName);
+    }
+
+    getProjectByID(id) {
+        return this.#projectsList.find((project) => project.id === id);
     }
 
     getAllProjects() {

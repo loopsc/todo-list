@@ -10,8 +10,29 @@ export default function render() {
     const contentDiv = document.querySelector(".content");
     const tasksContainer = document.querySelector(".tasks-container");
     const newProjectButton = document.querySelector(".new-project-button");
-    const projectsListDiv = document.querySelector(".projects-list")
+    const projectsListDiv = document.querySelector(".projects-list");
+    const defaultProjectButton = document.querySelector(".default-project");
+    const defaultProject = list.getAllProjects()[0];
+    let activeProject = defaultProject;
 
+    // Default project
+    defaultProjectButton.addEventListener("click", () => {
+        activeProject = defaultProject;
+        console.log("Current active project", activeProject);
+
+        // Clear the DOM
+        tasksContainer.innerHTML = "";
+        console.log("Task container cleared")
+        if (defaultProject.getAllTasks())
+
+        // Append each task in the project to the DOM as cards
+        defaultProject.getAllTasks().forEach(task => {
+            const taskCard = createTaskCard(task);
+            tasksContainer.appendChild(taskCard);
+        });
+    });
+
+    // Render and add new project
     newProjectButton.addEventListener("click", () => {
         const { dialog, form, projectName } = addProjectDialog();
 
@@ -22,16 +43,38 @@ export default function render() {
 
             const project = new Project(projectName.value);
             list.addProject(project);
-            console.log(list.getAllProjects());
+            console.log("List of all projects", list.getAllProjects());
 
-            const newProjectButton = document.createElement("button")
-            newProjectButton.classList.add("projects-button")
-            newProjectButton.textContent = projectName.value
+            // Create the button
+            const newProjectButton = document.createElement("button");
+            newProjectButton.classList.add("projects-button");
+            newProjectButton.setAttribute("data-id", project.id);
+            newProjectButton.textContent = projectName.value;
 
-            projectsListDiv.appendChild(newProjectButton)
+            // Append to the dom
+            projectsListDiv.appendChild(newProjectButton);
+
+            form.reset();
+            dialog.close();
+            dialog.remove();
+
+            // Set as current active project
+            newProjectButton.addEventListener("click", () => {
+                activeProject = project;
+                console.log("Current active project", activeProject);
+
+                // Clear the DOM
+                tasksContainer.innerHTML = "";
+
+                activeProject.getAllTasks().forEach(task => {
+                    const taskCard = createTaskCard(task);
+                    tasksContainer.appendChild(taskCard)
+                })
+            });
         });
     });
 
+    // Render and add new task
     newTaskButton.addEventListener("click", () => {
         const { dialog, form, inputs } = addTaskDialog();
 
@@ -40,20 +83,19 @@ export default function render() {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
+            // Create a new task using inputs
             const name = inputs.taskName.value;
             const desc = inputs.descTextarea.value;
             const due = inputs.dueInput.value;
             const prio = inputs.prioritySelect.value;
-
             const task = new Task(name, desc, due, prio);
-            const defaultProject = list.getAllProjects()[0];
 
-            defaultProject.addTask(task);
+            // Add the task to the current project
+            activeProject.addTask(task);
 
             const taskCard = createTaskCard(task);
             tasksContainer.appendChild(taskCard);
 
-            console.log(defaultProject.getTasks());
             form.reset();
             dialog.close();
             dialog.remove();

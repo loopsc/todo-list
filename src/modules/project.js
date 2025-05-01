@@ -12,11 +12,8 @@ class Project {
         return this.#id;
     }
 
-    getTasks() {
-        if (this.#tasksList.length === 0) {
-            return "No tasks in this project."
-        }
-        else return this.#tasksList;
+    getAllTasks() {
+        return this.#tasksList
     }
 
     addTask(task) {
