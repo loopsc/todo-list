@@ -11,7 +11,6 @@
 }
 
 body {
-    
     margin: 0;
     padding: 0;
     height: 100vh;
@@ -104,10 +103,16 @@ button {
     border: 1px solid rgba(0, 0, 0, 0.384);
 }
 
-.task-div:hover {
+.task-div:hover:not(.editing) {
     scale: 1.03;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
     cursor: pointer;
+}
+
+.task-div:hover .task-buttons,
+.task-div.editing .task-buttons {
+    display: flex;
+    gap: 0.5rem;
 }
 
 .dialog {
@@ -142,8 +147,8 @@ button {
     align-self: flex-start;
 }
 
-.form input, 
-.form textarea, 
+.form input,
+.form textarea,
 .form select {
     padding: 8px;
     font-size: 1rem;
@@ -153,8 +158,8 @@ button {
     width: 100%;
 }
 
-.form input:focus, 
-.form textarea:focus, 
+.form input:focus,
+.form textarea:focus,
 .form select:focus {
     border-color: var(--powder-blue);
     outline: none;
@@ -171,7 +176,6 @@ button {
     gap: 12px;
     justify-content: center;
 }
-
 
 .form-button {
     background-color: var(--cool-gray);
@@ -190,3 +194,48 @@ button {
     background-color: var(--powder-blue);
 }
 
+/* Buttons on task edit */
+
+.task-buttons {
+    display: none;
+    flex-direction: row;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 10px;
+}
+
+.task-buttons button {
+    padding: 4px 8px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    border: none;
+    background-color: var(--cool-gray);
+    border-radius: 4px;
+    transition: var(--powder-blue) 0.2s ease;
+}
+
+.task-buttons button:hover {
+    background-color: var(--powder-blue);
+}
+
+/* Inputs on task edit */
+
+.task-inputs {
+    display: block;
+    margin: 8px auto;
+    padding: 6px 10px;
+    width: 80%;
+    max-width: 250px;
+    font-size: 1rem;
+    border: 1px solid var(--cool-gray);
+    border-radius: 6px;
+    background-color: white;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.task-inputs:focus {
+    outline: none;
+    border-color: var(--powder-blue);
+    box-shadow: 0 0 5px var(--powder-blue);
+}

@@ -1,4 +1,5 @@
 import { Project } from "./project";
+import { Task } from "./task";
 
 class ProjectsList {
     #projectsList;
@@ -27,7 +28,9 @@ class ProjectsList {
 
     // Returns a project object with the corresponding name
     getProjectByName(projectName) {
-        return this.#projectsList.find((project) => project.name === projectName);
+        return this.#projectsList.find(
+            (project) => project.name === projectName
+        );
     }
 
     getProjectByID(id) {
