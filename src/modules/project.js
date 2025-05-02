@@ -1,11 +1,11 @@
 class Project {
-    #id
-    #tasksList
+    #id;
+    #tasksList;
 
     constructor(name) {
         this.name = name;
         this.#tasksList = [];
-        this.#id = crypto.randomUUID()
+        this.#id = crypto.randomUUID();
     }
 
     get id() {
@@ -13,21 +13,16 @@ class Project {
     }
 
     getAllTasks() {
-        return this.#tasksList
+        return this.#tasksList;
     }
 
     addTask(task) {
-        this.#tasksList.push(task)
+        this.#tasksList.push(task);
     }
 
     removeTask(task) {
-        const taskID = task.id;
-        for (let i = 0; i < this.#tasksList.length; i++) {
-            if (this.#tasksList[i].id === taskID) {
-                this.#tasksList.splice(i, 1);
-            }
-        }
+        this.#tasksList = this.#tasksList.filter((t) => t.id !== task.id);
     }
 }
 
-export { Project }
+export { Project };

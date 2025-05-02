@@ -12,17 +12,18 @@ export default function render() {
     const newProjectButton = document.querySelector(".new-project-button");
     const projectsListDiv = document.querySelector(".projects-list");
     const defaultProjectButton = document.querySelector(".default-project");
+    const projectNameHeading = document.querySelector(".active-project-name")
     const defaultProject = list.getAllProjects()[0];
     let activeProject = defaultProject;
 
     // Default project
     defaultProjectButton.addEventListener("click", () => {
         activeProject = defaultProject;
+        projectNameHeading.textContent = "Default"
         console.log("Current active project", activeProject);
 
         // Clear the DOM
         tasksContainer.innerHTML = "";
-        console.log("Task container cleared")
         if (defaultProject.getAllTasks())
 
         // Append each task in the project to the DOM as cards
@@ -61,15 +62,19 @@ export default function render() {
             // Set as current active project
             newProjectButton.addEventListener("click", () => {
                 activeProject = project;
+                projectNameHeading.textContent = activeProject.name
                 console.log("Current active project", activeProject);
 
                 // Clear the DOM
                 tasksContainer.innerHTML = "";
 
+                // Add all tasks in projec to DOM
                 activeProject.getAllTasks().forEach(task => {
                     const taskCard = createTaskCard(task);
                     tasksContainer.appendChild(taskCard)
                 })
+
+
             });
         });
     });
@@ -88,13 +93,15 @@ export default function render() {
             const desc = inputs.descTextarea.value;
             const due = inputs.dueInput.value;
             const prio = inputs.prioritySelect.value;
-            const task = new Task(name, desc, due, prio);
+            const task = new Task(name, desc, due, prio, activeProject);
 
             // Add the task to the current project
             activeProject.addTask(task);
 
             const taskCard = createTaskCard(task);
             tasksContainer.appendChild(taskCard);
+
+            console.log(task)
 
             form.reset();
             dialog.close();
