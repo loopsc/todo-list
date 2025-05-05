@@ -1,3 +1,5 @@
+import { Task } from "./task";
+
 class Project {
     #id;
     #tasksList;
@@ -12,6 +14,10 @@ class Project {
         return this.#id;
     }
 
+    set id(id) {
+        this.#id = id
+    }
+
     getAllTasks() {
         return this.#tasksList;
     }
@@ -22,6 +28,24 @@ class Project {
 
     removeTask(task) {
         this.#tasksList = this.#tasksList.filter((t) => t.id !== task.id);
+    }
+
+    toJSON() {
+        return {
+            name: this.name,
+            id: this.id,
+            tasks: this.getAllTasks().map(task => task.toJSON())
+        };
+    }
+
+    static fromJSON(obj) {
+        const project = new Project(obj.name);
+        project.#id = obj.id;
+        obj.tasks.forEach(taskData => {
+            const task = Task.fromJSON(taskData, project);
+            project.addTask(task);
+        });
+        return project;
     }
 }
 

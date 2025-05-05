@@ -6,10 +6,14 @@ class ProjectsList {
 
     constructor() {
         this.#projectsList = [];
+        
+        // Create the default project and add it to the list
+        const defaultProject = new Project("Default");
+        this.#projectsList.push(defaultProject);
     }
 
     addProject(projectToAdd) {
-        // Checks if an object with that name already exists.
+        // Checks if an object with that name already exists
         if (!this.getProjectByName(projectToAdd.name)) {
             this.#projectsList.push(projectToAdd);
         } else {
@@ -18,10 +22,18 @@ class ProjectsList {
     }
 
     removeProject(project) {
+        // Prevent removal of the default project
+        if (project.id === defaultProject.id) {
+            console.log("Cannot remove the default project.");
+            return;
+        }
+
         const projectID = project.id;
         for (let i = 0; i < this.#projectsList.length; i++) {
             if (this.#projectsList[i].id === projectID) {
                 this.#projectsList.splice(i, 1);
+                console.log(`Project '${project.name}' removed.`);
+                return;
             }
         }
     }
@@ -42,16 +54,13 @@ class ProjectsList {
     }
 
     clearAllProjects() {
-        this.#projectsList.length = 0;
+        // This will only clear projects that are not the default
+        this.#projectsList = this.#projectsList.filter(project => project.name !== "Default");
     }
 }
 
 // Export the singleton instance of ProjectsList
 // Ensures that only one ProjectsList can be created.
 const list = new ProjectsList();
-
-// Add a default project to the list
-const defaultProject = new Project("Default");
-list.addProject(defaultProject);
 
 export { list };

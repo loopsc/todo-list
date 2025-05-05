@@ -4,6 +4,7 @@ import createTaskCard from "./components/task-card";
 import { Project } from "./project";
 import { list } from "./projects-list";
 import { Task } from "./task";
+import { saveProjects, loadProjects } from "./storage";
 
 export default function render() {
     const newTaskButton = document.querySelector(".new-task-button");
@@ -12,25 +13,57 @@ export default function render() {
     const newProjectButton = document.querySelector(".new-project-button");
     const projectsListDiv = document.querySelector(".projects-list");
     const defaultProjectButton = document.querySelector(".default-project");
-    const projectNameHeading = document.querySelector(".active-project-name")
+    const projectNameHeading = document.querySelector(".active-project-name");
+
+    loadProjects();
+
     const defaultProject = list.getAllProjects()[0];
     let activeProject = defaultProject;
+
+    list.getAllProjects().forEach((project) => {
+        if (project.id === defaultProject.id) return;
+
+        // Create the button
+        const newProjectButton = document.createElement("button");
+        newProjectButton.classList.add("projects-button");
+        newProjectButton.setAttribute("data-id", project.id);
+        newProjectButton.textContent = project.name;
+
+        projectsListDiv.appendChild(newProjectButton);
+
+        newProjectButton.addEventListener("click", () => {
+            activeProject = project;
+            projectNameHeading.textContent = activeProject.name;
+
+            tasksContainer.innerHTML = "";
+            activeProject.getAllTasks().forEach((task) => {
+                const taskCard = createTaskCard(task);
+                tasksContainer.appendChild(taskCard);
+            });
+        });
+    });
+
+    console.log("All projects after being loaded", list.getAllProjects());
+
+    defaultProject.getAllTasks().forEach((task) => {
+        const taskCard = createTaskCard(task);
+        tasksContainer.appendChild(taskCard);
+    });
 
     // Default project
     defaultProjectButton.addEventListener("click", () => {
         activeProject = defaultProject;
-        projectNameHeading.textContent = "Default"
+        projectNameHeading.textContent = "Default";
         console.log("Current active project", activeProject);
 
         // Clear the DOM
         tasksContainer.innerHTML = "";
         if (defaultProject.getAllTasks())
-
-        // Append each task in the project to the DOM as cards
-        defaultProject.getAllTasks().forEach(task => {
-            const taskCard = createTaskCard(task);
-            tasksContainer.appendChild(taskCard);
-        });
+            // Append each task in the project to the DOM as cards
+            defaultProject.getAllTasks().forEach((task) => {
+                const taskCard = createTaskCard(task);
+                tasksContainer.appendChild(taskCard);
+            });
     });
 
     // Render and add new project
@@ -62,19 +95,17 @@ export default function render() {
             // Set as current active project
             newProjectButton.addEventListener("click", () => {
                 activeProject = project;
-                projectNameHeading.textContent = activeProject.name
+                projectNameHeading.textContent = activeProject.name;
                 console.log("Current active project", activeProject);
 
                 // Clear the DOM
                 tasksContainer.innerHTML = "";
 
                 // Add all tasks in projec to DOM
-                activeProject.getAllTasks().forEach(task => {
+                activeProject.getAllTasks().forEach((task) => {
                     const taskCard = createTaskCard(task);
-                    tasksContainer.appendChild(taskCard)
-                })
-
-
+                    tasksContainer.appendChild(taskCard);
+                });
             });
         });
     });
@@ -97,11 +128,12 @@ export default function render() {
 
             // Add the task to the current project
             activeProject.addTask(task);
+            saveProjects();
 
             const taskCard = createTaskCard(task);
             tasksContainer.appendChild(taskCard);
 
-            console.log(task)
+            console.log(task);
 
             form.reset();
             dialog.close();
