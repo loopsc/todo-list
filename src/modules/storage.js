@@ -24,6 +24,7 @@ function storageAvailable(type) {
 
 function saveProjects() {
     if (!storageAvailable("localStorage")) return;
+    console.log("Saved to local storage")
 
     const allProjects = list.getAllProjects().map((project) => {
         return {
@@ -44,6 +45,10 @@ function saveProjects() {
     localStorage.setItem("projects", JSON.stringify(allProjects));
 }
 
+/**
+ * 
+ * @returns Load 'list' with content from local storage
+ */
 function loadProjects() {
     if (!storageAvailable("localStorage")) {
         console.log("Storage unavailable");
@@ -59,13 +64,11 @@ function loadProjects() {
 
     // Array of all projects
     const projectDataArray = JSON.parse(stored);
-    console.log("Array of projects", projectDataArray)
+    console.log("Loading projects from local storage", projectDataArray)
     // clear the list so there are no duplicate projects when loading
     list.clearAllProjects();
-    console.log("Cleared 'list'")
 
     // Parse each project from plain objects back into class objects
-
     projectDataArray.forEach((projData) => {
         const project = new Project(projData.name);
         project.id = projData.id;
@@ -84,8 +87,6 @@ function loadProjects() {
         });
         list.addProject(project);
     });
-
-    
 }
 
 export { saveProjects, loadProjects };

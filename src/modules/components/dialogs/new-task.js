@@ -1,3 +1,5 @@
+
+
 export default function addTaskDialog() {
     // Create the dialog element
     const dialog = document.createElement("dialog");
@@ -58,7 +60,7 @@ export default function addTaskDialog() {
     dueInput.setAttribute("type", "date");
     dueInput.setAttribute("name", "due");
     dueInput.setAttribute("id", "due");
-    dueInput.setAttribute("required", "");
+    // dueInput.setAttribute("required", "");
     dueGroup.appendChild(dueInput);
 
     // Append due group to form

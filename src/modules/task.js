@@ -11,7 +11,7 @@ class Task {
     constructor(title, desc, dueDate, prio, project=list.getAllProjects()[0]) {
         this.title = title;
         this.desc = desc;
-        this.dueDate = format(new Date(dueDate), "dd-MM-yyyy");
+        this.dueDate = format(new Date(dueDate), "yyyy-MM-dd");
         this.prio = prio;
         this.#project = project;
         this.#id = crypto.randomUUID()

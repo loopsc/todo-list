@@ -5,6 +5,7 @@ import { Project } from "./project";
 import { list } from "./projects-list";
 import { Task } from "./task";
 import { saveProjects, loadProjects } from "./storage";
+import { format } from "date-fns";
 
 export default function render() {
     const newTaskButton = document.querySelector(".new-task-button");
@@ -100,7 +101,6 @@ export default function render() {
 
                 // Clear the DOM
                 tasksContainer.innerHTML = "";
-
                 // Add all tasks in projec to DOM
                 activeProject.getAllTasks().forEach((task) => {
                     const taskCard = createTaskCard(task);
@@ -122,7 +122,12 @@ export default function render() {
             // Create a new task using inputs
             const name = inputs.taskName.value;
             const desc = inputs.descTextarea.value;
-            const due = inputs.dueInput.value;
+            let due;
+            if (inputs.dueInput.value === "") {
+                due = format(new Date(), "yyyy-MM-dd");
+            } else {
+                due = inputs.dueInput.value;
+            }
             const prio = inputs.prioritySelect.value;
             const task = new Task(name, desc, due, prio, activeProject);
 

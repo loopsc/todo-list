@@ -1,5 +1,4 @@
 import { Project } from "./project";
-import { Task } from "./task";
 
 class ProjectsList {
     #projectsList;
