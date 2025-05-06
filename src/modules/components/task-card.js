@@ -1,4 +1,5 @@
 import { Task } from "../task";
+import { saveProjects } from "../storage";
 
 /**
  *
@@ -8,6 +9,7 @@ import { Task } from "../task";
 export default function createTaskCard(task) {
     const card = document.createElement("div");
     card.classList.add("task-div");
+    task.isComplete ? card.classList.add("completed") : card.classList.remove("completed")
 
     const title = document.createElement("p");
     title.classList.add("task-title");
@@ -44,6 +46,12 @@ export default function createTaskCard(task) {
 
     const prioInput = document.createElement("select");
     prioInput.classList.add("task-inputs");
+
+    const placeholderOption = document.createElement("option");
+    placeholderOption.textContent = "--Priority--";
+    placeholderOption.disabled = true;
+    prioInput.appendChild(placeholderOption)
+
     for (let i = 1; i <= 5; i++) {
         const opt = document.createElement("option");
         opt.value = i;
@@ -98,6 +106,8 @@ export default function createTaskCard(task) {
         buttonGroup
     );
 
+    card.addEventListener("click", () => console.log(task))
+
     editButton.addEventListener("click", () => {
         card.classList.add("editing");
 
@@ -138,6 +148,8 @@ export default function createTaskCard(task) {
         [editButton, completeButton, deleteButton].forEach(
             (el) => (el.style.display = "inline")
         );
+
+        saveProjects();
     });
 
     cancelButton.addEventListener("click", () => {
@@ -155,6 +167,7 @@ export default function createTaskCard(task) {
         );
     });
 
+
     completeButton.addEventListener("click", () => {
         task.toggleComplete();
 
@@ -165,12 +178,15 @@ export default function createTaskCard(task) {
             card.classList.remove("completed");
             editButton.disabled = false;
         }
+
+        saveProjects();
     });
 
     deleteButton.addEventListener("click", () => {
         task.project.removeTask(task);
 
         card.remove()
+        saveProjects();
     })
 
     return card;

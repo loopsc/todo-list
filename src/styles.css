@@ -1,13 +1,19 @@
 :root {
-    --primary: #9d858d;
-    --secondary: #bba0b2;
-    --cool-gray: #a4a8d1;
-    --powder-blue: #a4bfeb;
-    --cadet-gray: #8cabbe;
+    --primary: #f4f4f9;
+    --secondary: #e1e5f2;
+    --cool-gray: #6c7a89;
+    --powder-blue: #7ea9e1;
+    --cadet-gray: #85b7bb;
+    --accent: #4b7bec;
+    --text-dark: #2c3e50;
+    --text-light: #ecf0f1;
+    --radius: 12px;
+    --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 * {
     box-sizing: border-box;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 body {
@@ -15,11 +21,12 @@ body {
     padding: 0;
     height: 100vh;
     width: 100vw;
+    background-color: var(--primary);
+    color: var(--text-dark);
 }
 
 .container {
     display: flex;
-    background-color: var(--primary);
     height: 100%;
     width: 100%;
 }
@@ -27,244 +34,201 @@ body {
 .sidebar {
     display: flex;
     flex-direction: column;
-    padding: 24px 12px;
-    flex-grow: 1;
-    flex-shrink: 0;
+    padding: 24px 16px;
     background-color: var(--secondary);
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-    align-items: center;
-    gap: 15px;
+    box-shadow: var(--shadow);
+    gap: 20px;
+    min-width: 250px;
 }
 
 .projects-list {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    gap: 12px;
     width: 100%;
-    gap: 8px;
 }
 
 button {
-    background-color: var(--cool-gray);
+    background-color: var(--accent);
     border: none;
-    border-radius: 6px;
-    padding: 9px;
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
-    font-size: 1.2rem;
-    width: 70%;
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    font-size: 1rem;
+    color: white;
+    font-weight: 500;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+button:hover {
+    cursor: pointer;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15);
+}
+
+.projects-button {
+    background-color: var(--cool-gray);
 }
 
 .new-task-button {
-    width: auto;
+    align-self: flex-start;
     position: absolute;
     left: 2rem;
-}
-
-.task-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-}
-
-.projects-button:hover,
-.new-task-button:hover {
-    cursor: pointer;
-    scale: 1.05;
+    top: 1rem;
 }
 
 .new-project-button {
-    background-color: powderblue;
+    background-color: var(--accent);
 }
 
 .content {
-    flex: 6;
+    flex: 1;
     display: flex;
     flex-direction: column;
+    background-color: white;
+    border-top-left-radius: var(--radius);
+    border-bottom-left-radius: var(--radius);
+    overflow: hidden;
 }
 
 .content-header-bar {
     background-color: var(--cadet-gray);
-    border: 1px solid black;
-    box-shadow: 0px 2px 5px -2px rgba(0, 0, 0, 0.5);
-    padding: 1rem 3rem;
-
+    padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
+    box-shadow: var(--shadow);
 }
 
 .active-project-name {
     font-size: 1.5rem;
     font-weight: bold;
-    color: black;
-    flex-grow: 1;
+    color: white;
     text-align: center;
 }
 
 .tasks-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, 25%);
-    flex: 6;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 16px;
     padding: 2rem;
-    gap: 12px;
 }
 
 .task-div {
-    background-color: var(--cadet-gray);
-    padding: 12px;
-    height: fit-content;
-    border-radius: 4px;
-    text-align: center;
-    border: 1px solid rgba(0, 0, 0, 0.384);
+    background-color: white;
+    border-radius: var(--radius);
+    padding: 16px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .task-div:hover:not(.editing) {
-    scale: 1.03;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    cursor: pointer;
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+
+.task-title {
+    font-size: 1.2rem;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.task-buttons {
+    display: none;
+    justify-content: center;
+    margin-top: 12px;
+    gap: 0.5rem;
 }
 
 .task-div:hover .task-buttons,
 .task-div.editing .task-buttons {
     display: flex;
-    gap: 0.5rem;
+}
+
+.task-buttons button {
+    padding: 6px 10px;
+    font-size: 0.9rem;
+    background-color: var(--cool-gray);
+}
+
+.task-buttons button:hover {
+    background-color: var(--accent);
 }
 
 .dialog {
-    border: 1px solid black;
-    background-color: transparent;
-    padding: 16px;
-    background-color: var(--cadet-gray);
-    border-radius: 8px;
-    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.2);
+    background-color: white;
+    padding: 24px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
     position: absolute;
     top: 20%;
     left: 10%;
+    z-index: 10;
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    width: 100%;
+    gap: 16px;
 }
 
-.form-group {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.form label {
-    font-size: 1.1rem;
-    color: white;
-    font-weight: bold;
-    align-self: flex-start;
+.form-group label {
+    font-weight: 600;
+    color: var(--text-dark);
 }
 
 .form input,
 .form textarea,
 .form select {
-    padding: 8px;
-    font-size: 1rem;
     border-radius: 6px;
-    border: 1px solid var(--cool-gray);
-    background-color: white;
+    border: 1px solid var(--cadet-gray);
+    padding: 10px;
+    font-size: 1rem;
     width: 100%;
 }
 
-.form input:focus,
-.form textarea:focus,
-.form select:focus {
-    border-color: var(--powder-blue);
-    outline: none;
-    box-shadow: 0 0 5px var(--powder-blue);
-}
-
-.form textarea {
-    resize: vertical;
-    min-height: 100px;
+.form-button {
+    background-color: var(--accent);
+    color: white;
+    font-weight: bold;
+    border-radius: var(--radius);
+    padding: 10px 16px;
+    font-size: 1rem;
 }
 
 .button-group {
     display: flex;
+    justify-content: center;
     gap: 12px;
-    justify-content: center;
 }
 
-.form-button {
-    background-color: var(--cool-gray);
-    border: none;
-    border-radius: 6px;
-    padding: 9px;
-    font-size: 1.2rem;
-    width: auto;
-    cursor: pointer;
-    transition: 0.2s all ease-in-out;
+.task-div.completed {
+    background-color: #e3e3e3;
+    text-decoration: line-through;
+    opacity: 0.75;
 }
 
-.button-group button:hover {
-    scale: 1.05;
-    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
-    background-color: var(--powder-blue);
+.task-div.completed * {
+    text-decoration: line-through;
 }
-
-/* Buttons on task edit */
-
-.task-buttons {
-    display: none;
-    flex-direction: row;
-    justify-content: center;
-    gap: 0.5rem;
-    margin-top: 10px;
-}
-
-.task-buttons button {
-    padding: 4px 8px;
-    font-size: 0.85rem;
-    cursor: pointer;
-    border: none;
-    background-color: var(--cool-gray);
-    border-radius: 4px;
-    transition: var(--powder-blue) 0.2s ease;
-}
-
-.task-buttons button:hover {
-    background-color: var(--powder-blue);
-}
-
-/* Inputs on task edit */
 
 .task-inputs {
     display: block;
     margin: 8px auto;
-    padding: 6px 10px;
+    padding: 10px 14px;
     width: 80%;
-    max-width: 250px;
+    max-width: 280px;
     font-size: 1rem;
     border: 1px solid var(--cool-gray);
-    border-radius: 6px;
+    border-radius: 8px;
     background-color: white;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
     transition: border-color 0.2s, box-shadow 0.2s;
 }
 
 .task-inputs:focus {
     outline: none;
     border-color: var(--powder-blue);
-    box-shadow: 0 0 5px var(--powder-blue);
-}
-
-.task-div.completed {
-    opacity: 0.6;
-    background-color: #d3d3d3;
-    text-decoration: line-through;
-    pointer-events: auto;
-}
-
-.task-div.completed .task-title,
-.task-div.completed .task-desc,
-.task-div.completed .task-due-date,
-.task-div.completed .task-priority {
-    text-decoration: line-through;
+    box-shadow: 0 0 6px var(--powder-blue);
 }
