@@ -21,6 +21,7 @@ export default function addProjectDialog() {
     projectName.setAttribute("id", "project-name");
     projectName.setAttribute("required", "");
     projectName.setAttribute("maxlength", "20");
+    projectName.setAttribute("autocomplete", "off")
     taskGroup.appendChild(projectName);
 
     form.appendChild(taskGroup);

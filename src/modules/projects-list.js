@@ -2,13 +2,23 @@ import { Project } from "./project";
 
 class ProjectsList {
     #projectsList;
+    #activeProject;
 
     constructor() {
         this.#projectsList = [];
-        
         // Create the default project and add it to the list
         const defaultProject = new Project("Default");
         this.#projectsList.push(defaultProject);
+
+        this.#activeProject = defaultProject
+    }
+
+    get activeProject() {
+        return this.#activeProject
+    }
+
+    set activeProject(newActiveProject) {
+        this.#activeProject = newActiveProject;
     }
 
     addProject(projectToAdd) {
@@ -56,6 +66,8 @@ class ProjectsList {
         // This will only clear projects that are not the default
         this.#projectsList = this.#projectsList.filter(project => project.name !== "Default");
     }
+
+
 }
 
 // Export the singleton instance of ProjectsList

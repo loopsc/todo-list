@@ -1,5 +1,3 @@
-
-
 export default function addTaskDialog() {
     // Create the dialog element
     const dialog = document.createElement("dialog");
@@ -20,12 +18,13 @@ export default function addTaskDialog() {
     taskLabel.textContent = "Task:";
     taskGroup.appendChild(taskLabel);
 
-    const taskName = document.createElement("input");
-    taskName.setAttribute("type", "text");
-    taskName.setAttribute("name", "task");
-    taskName.setAttribute("id", "task");
-    taskName.setAttribute("required", "");
-    taskGroup.appendChild(taskName);
+    const taskInput = document.createElement("input");
+    taskInput.setAttribute("type", "text");
+    taskInput.setAttribute("name", "task");
+    taskInput.setAttribute("id", "task");
+    taskInput.setAttribute("required", "");
+    taskInput.setAttribute("autocomplete", "off");
+    taskGroup.appendChild(taskInput);
 
     // Append task group to form
     form.appendChild(taskGroup);
@@ -131,7 +130,7 @@ export default function addTaskDialog() {
         dialog,
         form,
         inputs: {
-            taskName,
+            taskInput,
             descTextarea,
             dueInput,
             prioritySelect,

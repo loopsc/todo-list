@@ -24,7 +24,6 @@ function storageAvailable(type) {
 
 function saveProjects() {
     if (!storageAvailable("localStorage")) return;
-    console.log("Saved to local storage")
 
     const allProjects = list.getAllProjects().map((project) => {
         return {
@@ -40,7 +39,7 @@ function saveProjects() {
             })),
         };
     });
-    console.log("Saving projects", allProjects)
+    console.log("Saved to local storage", allProjects)
     // JSON object of all objects
     localStorage.setItem("projects", JSON.stringify(allProjects));
 }
