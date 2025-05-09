@@ -58,18 +58,17 @@ export default function render() {
     const editProjectButton = document.querySelector(".edit-project-button");
 
     editProjectButton.addEventListener("click", () => {
-        const { dialog, form, newName, deleteButton } = editProjectDialog(
-            list.activeProject
-        );
+        // prettier-ignore
+        const { dialog, form, newNameInput, deleteButton } = editProjectDialog(list.activeProject);
 
         contentDiv.appendChild(dialog);
 
         form.addEventListener("submit", () => {
-            list.activeProject.name = newName.value;
+            list.activeProject.name = newNameInput.value;
 
             saveProjects();
-
-            
+            renderProjectButtons(projectsListDiv)
+            renderTasks(projectNameHeading,tasksContainer)
         });
 
         deleteButton.addEventListener("click", () => {
@@ -94,12 +93,10 @@ export default function render() {
      * @param {Button} button Button to add event listener to
      * @param {Project} project Clicked project
      */
-    function makeProjectActive(button, project) {
-        button.addEventListener("click", () => {
-            list.activeProject = project;
+    function makeProjectActive(project) {
+        list.activeProject = project;
 
-            renderTasks(projectNameHeading, tasksContainer);
-        });
+        renderTasks(projectNameHeading, tasksContainer);
     }
 
     function renderProjectButtons(projectsListDiv) {
@@ -109,7 +106,10 @@ export default function render() {
             const projectButton = createProjectButton(project);
             projectsListDiv.appendChild(projectButton);
 
-            makeProjectActive(projectButton, project);
+            projectButton.addEventListener("click", () => {
+                makeProjectActive(project);
+            })
+            
         });
     }
 
@@ -148,8 +148,11 @@ export default function render() {
             projectsListDiv.appendChild(projectButton);
 
             saveProjects();
+            makeProjectActive(project)
 
-            makeProjectActive(projectButton, project);
+            projectButton.addEventListener("click", () => {
+                makeProjectActive(project)
+            })
 
             handleFormClose(form, dialog);
         });

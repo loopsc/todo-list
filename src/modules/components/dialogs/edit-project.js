@@ -23,6 +23,7 @@ export default function editProjectDialog(project) {
     newNameInput.setAttribute("name", "projectNameEdit");
     newNameInput.setAttribute("required", "");
     newNameInput.setAttribute("placeholder", project.name);
+    newNameInput.setAttribute("autocomplete", "off")
 
     inputsGroup.append(newNameLabel, newNameInput);
 
