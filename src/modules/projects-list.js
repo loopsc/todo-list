@@ -3,14 +3,15 @@ import { Project } from "./project";
 class ProjectsList {
     #projectsList;
     #activeProject;
+    #defaultProject;
 
     constructor() {
         this.#projectsList = [];
         // Create the default project and add it to the list
-        const defaultProject = new Project("Default");
-        this.#projectsList.push(defaultProject);
+        this.#defaultProject = new Project("Default");
+        this.#projectsList.push(this.#defaultProject);
 
-        this.#activeProject = defaultProject
+        this.#activeProject = this.#defaultProject
     }
 
     get activeProject() {
@@ -32,7 +33,7 @@ class ProjectsList {
 
     removeProject(project) {
         // Prevent removal of the default project
-        if (project.id === defaultProject.id) {
+        if (project.id === this.#defaultProject.id) {
             console.log("Cannot remove the default project.");
             return;
         }

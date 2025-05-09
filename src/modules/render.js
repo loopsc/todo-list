@@ -6,6 +6,7 @@ import { list } from "./projects-list";
 import { Task } from "./task";
 import { saveProjects, loadProjects } from "./storage";
 import { format } from "date-fns";
+import editProjectDialog from "./components/dialogs/edit-project";
 
 function renderTasks(projectNameHeading, tasksContainer) {
     projectNameHeading.textContent = list.activeProject.name;
@@ -54,9 +55,42 @@ export default function render() {
     const newProjectButton = document.querySelector(".new-project-button");
     const projectsListDiv = document.querySelector(".projects-list");
     const projectNameHeading = document.querySelector(".active-project-name");
+    const editProjectButton = document.querySelector(".edit-project-button");
+
+    editProjectButton.addEventListener("click", () => {
+        const { dialog, form, newName, deleteButton } = editProjectDialog(
+            list.activeProject
+        );
+
+        contentDiv.appendChild(dialog);
+
+        form.addEventListener("submit", () => {
+            list.activeProject.name = newName.value;
+
+            saveProjects();
+
+            
+        });
+
+        deleteButton.addEventListener("click", () => {
+            list.removeProject(list.activeProject);
+            console.log("Project deleted", list.activeProject);
+
+            list.activeProject = defaultProject;
+            console.log("Set default project to", list.activeProject);
+
+            saveProjects();
+
+            renderProjectButtons(projectsListDiv)
+            list.activeProject = defaultProject;
+            renderTasks(projectNameHeading,tasksContainer)
+
+            handleFormClose(form, dialog);
+        });
+    });
 
     /**
-     *
+     * Set and display the current active project on the DOM
      * @param {Button} button Button to add event listener to
      * @param {Project} project Clicked project
      */
@@ -68,19 +102,24 @@ export default function render() {
         });
     }
 
+    function renderProjectButtons(projectsListDiv) {
+        projectsListDiv.innerHTML = "";
+
+        list.getAllProjects().forEach((project) => {
+            const projectButton = createProjectButton(project);
+            projectsListDiv.appendChild(projectButton);
+
+            makeProjectActive(projectButton, project);
+        });
+    }
+
     // Load data from local storage
     loadProjects();
 
     // Create variables after projects have been loaded from local storage
     const defaultProject = list.getAllProjects()[0];
 
-    list.getAllProjects().forEach((project) => {
-        // Create and append projects to list of projects
-        const projectButton = createProjectButton(project);
-        projectsListDiv.appendChild(projectButton);
-
-        makeProjectActive(projectButton, project);
-    });
+    renderProjectButtons(projectsListDiv);
 
     console.log("All projects after being loaded", list.getAllProjects());
 
@@ -108,7 +147,7 @@ export default function render() {
             // Append to the dom
             projectsListDiv.appendChild(projectButton);
 
-            saveProjects()
+            saveProjects();
 
             makeProjectActive(projectButton, project);
 
