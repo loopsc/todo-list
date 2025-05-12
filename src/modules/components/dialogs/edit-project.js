@@ -1,5 +1,4 @@
-import { list } from "../../projects-list";
-import { saveProjects } from "../../storage";
+import { handleFormClose } from "../../utils";
 
 export default function editProjectDialog(project) {
     const dialog = document.createElement("dialog");
@@ -47,9 +46,7 @@ export default function editProjectDialog(project) {
     cancelButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        form.reset();
-        dialog.close();
-        dialog.remove();
+        handleFormClose(form, dialog)
     })
 
     saveCancelButtonsGroup.append(submitButton, cancelButton);
@@ -63,17 +60,6 @@ export default function editProjectDialog(project) {
     deleteButton.classList.add("delete");
     deleteButton.setAttribute("id", "deleteButton");
     deleteButton.textContent = "Delete Project";
-
-    // deleteButton.addEventListener("click", () => {
-    //     list.removeProject(project)
-    //     console.log("Project deleted", project)
-
-    //     saveProjects();
-
-    //     form.reset();
-    //     dialog.close();
-    //     dialog.remove();
-    // })
 
     deleteButtonGroup.appendChild(deleteButton);
 

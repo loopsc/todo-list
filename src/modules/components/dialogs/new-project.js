@@ -1,3 +1,5 @@
+import { handleFormClose } from "../../utils";
+
 export default function addProjectDialog() {
     const dialog = document.createElement("dialog");
     dialog.classList.add("dialog");
@@ -39,9 +41,7 @@ export default function addProjectDialog() {
     cancelButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        form.reset();
-        dialog.close();
-        dialog.remove();
+        handleFormClose(form, dialog)
     });
 
     // Create Submit Button

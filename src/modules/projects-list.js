@@ -64,11 +64,8 @@ class ProjectsList {
     }
 
     clearAllProjects() {
-        // This will only clear projects that are not the default
-        this.#projectsList = this.#projectsList.filter(project => project.name !== "Default");
+        this.#projectsList = [];
     }
-
-
 }
 
 // Export the singleton instance of ProjectsList

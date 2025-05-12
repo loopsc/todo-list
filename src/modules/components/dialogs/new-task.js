@@ -1,3 +1,5 @@
+import * as utils from "../../utils"
+
 export default function addTaskDialog() {
     // Create the dialog element
     const dialog = document.createElement("dialog");
@@ -108,9 +110,7 @@ export default function addTaskDialog() {
     cancelButton.addEventListener("click", (e) => {
         e.preventDefault();
 
-        form.reset();
-        dialog.close();
-        dialog.remove();
+        utils.handleFormClose(form, dialog)
     });
 
     // Create Submit Button

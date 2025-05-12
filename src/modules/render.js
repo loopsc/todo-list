@@ -7,6 +7,7 @@ import { Task } from "./task";
 import { saveProjects, loadProjects } from "./storage";
 import { format } from "date-fns";
 import editProjectDialog from "./components/dialogs/edit-project";
+import * as utils from "./utils";
 
 function renderTasks(projectNameHeading, tasksContainer) {
     projectNameHeading.textContent = list.activeProject.name;
@@ -25,7 +26,7 @@ function renderTasks(projectNameHeading, tasksContainer) {
 /**
  *
  * @param {Project} project
- * @returns Button element representing parameter project
+ * @returns Button element representing project
  */
 function createProjectButton(project) {
     const projectButton = document.createElement("button");
@@ -36,18 +37,6 @@ function createProjectButton(project) {
     return projectButton;
 }
 
-/**
- *
- * @param {FormData} form
- * @param {Dialog} dialog
- * Reset form. Close and remove dialog from DOM
- */
-function handleFormClose(form, dialog) {
-    form.reset();
-    dialog.close();
-    dialog.remove();
-}
-
 export default function render() {
     const newTaskButton = document.querySelector(".new-task-button");
     const contentDiv = document.querySelector(".content");
@@ -56,37 +45,6 @@ export default function render() {
     const projectsListDiv = document.querySelector(".projects-list");
     const projectNameHeading = document.querySelector(".active-project-name");
     const editProjectButton = document.querySelector(".edit-project-button");
-
-    editProjectButton.addEventListener("click", () => {
-        // prettier-ignore
-        const { dialog, form, newNameInput, deleteButton } = editProjectDialog(list.activeProject);
-
-        contentDiv.appendChild(dialog);
-
-        form.addEventListener("submit", () => {
-            list.activeProject.name = newNameInput.value;
-
-            saveProjects();
-            renderProjectButtons(projectsListDiv)
-            renderTasks(projectNameHeading,tasksContainer)
-        });
-
-        deleteButton.addEventListener("click", () => {
-            list.removeProject(list.activeProject);
-            console.log("Project deleted", list.activeProject);
-
-            list.activeProject = defaultProject;
-            console.log("Set default project to", list.activeProject);
-
-            saveProjects();
-
-            renderProjectButtons(projectsListDiv)
-            list.activeProject = defaultProject;
-            renderTasks(projectNameHeading,tasksContainer)
-
-            handleFormClose(form, dialog);
-        });
-    });
 
     /**
      * Set and display the current active project on the DOM
@@ -99,6 +57,10 @@ export default function render() {
         renderTasks(projectNameHeading, tasksContainer);
     }
 
+    /**
+     * Renders the projects list buttons
+     * @param {Div} projectsListDiv
+     */
     function renderProjectButtons(projectsListDiv) {
         projectsListDiv.innerHTML = "";
 
@@ -108,26 +70,15 @@ export default function render() {
 
             projectButton.addEventListener("click", () => {
                 makeProjectActive(project);
-            })
-            
+            });
         });
     }
 
+    // Initial loading of page
     // Load data from local storage
     loadProjects();
-
-    // Create variables after projects have been loaded from local storage
-    const defaultProject = list.getAllProjects()[0];
-
     renderProjectButtons(projectsListDiv);
-
-    console.log("All projects after being loaded", list.getAllProjects());
-
-    // Load the default on page load
-    defaultProject.getAllTasks().forEach((task) => {
-        const taskCard = createTaskCard(task);
-        tasksContainer.appendChild(taskCard);
-    });
+    renderTasks(projectNameHeading, tasksContainer);
 
     // Render and add new project
     newProjectButton.addEventListener("click", () => {
@@ -148,13 +99,13 @@ export default function render() {
             projectsListDiv.appendChild(projectButton);
 
             saveProjects();
-            makeProjectActive(project)
+            makeProjectActive(project);
 
             projectButton.addEventListener("click", () => {
-                makeProjectActive(project)
-            })
+                makeProjectActive(project);
+            });
 
-            handleFormClose(form, dialog);
+            utils.handleFormClose(form, dialog);
         });
     });
 
@@ -188,7 +139,36 @@ export default function render() {
 
             console.log(task);
 
-            handleFormClose(form, dialog);
+            utils.handleFormClose(form, dialog);
+        });
+    });
+
+    editProjectButton.addEventListener("click", () => {
+        // prettier-ignore
+        const { dialog, form, newNameInput, deleteButton } = editProjectDialog(list.activeProject);
+
+        contentDiv.appendChild(dialog);
+
+        form.addEventListener("submit", () => {
+            list.activeProject.name = newNameInput.value;
+
+            saveProjects();
+            renderProjectButtons(projectsListDiv);
+            renderTasks(projectNameHeading, tasksContainer);
+        });
+
+        deleteButton.addEventListener("click", () => {
+            list.removeProject(list.activeProject);
+
+            list.activeProject = defaultProject;
+
+            saveProjects();
+
+            renderProjectButtons(projectsListDiv);
+            list.activeProject = defaultProject;
+            renderTasks(projectNameHeading, tasksContainer);
+
+            utils.handleFormClose(form, dialog);
         });
     });
 }

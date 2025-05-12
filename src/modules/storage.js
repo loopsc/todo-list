@@ -39,16 +39,17 @@ function saveProjects() {
             })),
         };
     });
-    console.log("Saved to local storage", allProjects)
+    console.log("Saved to local storage", allProjects);
     // JSON object of all objects
     localStorage.setItem("projects", JSON.stringify(allProjects));
 }
 
 /**
- * 
+ *
  * @returns Load 'list' with content from local storage
  */
 function loadProjects() {
+    // Check if there is local storage supported
     if (!storageAvailable("localStorage")) {
         console.log("Storage unavailable");
         return;
@@ -56,16 +57,18 @@ function loadProjects() {
 
     // json object of all projects saved
     const stored = localStorage.getItem("projects");
+    // Check if there is any data in local storage
     if (!stored) {
-        console.log("Couldn't retrieve items from local storage")
+        console.log("Couldn't retrieve items from local storage");
         return;
     }
 
-    // Array of all projects
-    const projectDataArray = JSON.parse(stored);
-    console.log("Loading projects from local storage", projectDataArray)
     // clear the list so there are no duplicate projects when loading
     list.clearAllProjects();
+
+    // Array of all projects
+    const projectDataArray = JSON.parse(stored);
+    console.log("Loading projects from local storage", projectDataArray);
 
     // Parse each project from plain objects back into class objects
     projectDataArray.forEach((projData) => {
@@ -86,6 +89,8 @@ function loadProjects() {
         });
         list.addProject(project);
     });
+
+    list.activeProject = list.getAllProjects()[0];
 }
 
 export { saveProjects, loadProjects };
