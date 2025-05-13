@@ -90,7 +90,7 @@ function loadProjects() {
         list.addProject(project);
     });
 
-    list.activeProject = list.getAllProjects()[0];
+    list.activeProject = list.defaultProject;
 }
 
 export { saveProjects, loadProjects };

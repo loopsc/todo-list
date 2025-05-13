@@ -7,10 +7,12 @@ class ProjectsList {
 
     constructor() {
         this.#projectsList = [];
+    }
+
+    init() {
         // Create the default project and add it to the list
         this.#defaultProject = new Project("Default");
         this.#projectsList.push(this.#defaultProject);
-
         this.#activeProject = this.#defaultProject
     }
 
@@ -20,6 +22,11 @@ class ProjectsList {
 
     set activeProject(newActiveProject) {
         this.#activeProject = newActiveProject;
+    }
+
+    // Get the default project from local storage instead of from page load.
+    get defaultProject() {
+        return list.getAllProjects()[0]
     }
 
     addProject(projectToAdd) {

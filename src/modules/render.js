@@ -81,32 +81,21 @@ export default function render() {
     renderTasks(projectNameHeading, tasksContainer);
 
     // Render and add new project
-    newProjectButton.addEventListener("click", () => {
-        const { dialog, form, projectName } = addProjectDialog();
-
-        contentDiv.appendChild(dialog);
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            // Add project to list
-            const project = new Project(projectName.value);
-            list.addProject(project);
-            console.log("List of all projects", list.getAllProjects());
+    newProjectButton.addEventListener("click", async () => {
+        try {
+            const project = await addProjectDialog();
 
             const projectButton = createProjectButton(project);
-            // Append to the dom
             projectsListDiv.appendChild(projectButton);
-
             saveProjects();
             makeProjectActive(project);
 
             projectButton.addEventListener("click", () => {
                 makeProjectActive(project);
-            });
-
-            utils.handleFormClose(form, dialog);
-        });
+            })
+        } catch (err) {
+            console.log("Dialog canceled or error", err)
+        }
     });
 
     // Render and add new task
@@ -160,12 +149,10 @@ export default function render() {
         deleteButton.addEventListener("click", () => {
             list.removeProject(list.activeProject);
 
-            list.activeProject = defaultProject;
-
             saveProjects();
 
             renderProjectButtons(projectsListDiv);
-            list.activeProject = defaultProject;
+            list.activeProject = list.defaultProject;
             renderTasks(projectNameHeading, tasksContainer);
 
             utils.handleFormClose(form, dialog);
