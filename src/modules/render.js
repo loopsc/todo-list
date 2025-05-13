@@ -3,9 +3,7 @@ import addProjectDialog from "./components/dialogs/new-project";
 import createTaskCard from "./components/task-card";
 import { Project } from "./project";
 import { list } from "./projects-list";
-import { Task } from "./task";
 import { saveProjects, loadProjects } from "./storage";
-import { format } from "date-fns";
 import editProjectDialog from "./components/dialogs/edit-project";
 import * as utils from "./utils";
 
@@ -87,7 +85,7 @@ export default function render() {
 
             const projectButton = createProjectButton(project);
             projectsListDiv.appendChild(projectButton);
-            saveProjects();
+
             makeProjectActive(project);
 
             projectButton.addEventListener("click", () => {
@@ -99,37 +97,15 @@ export default function render() {
     });
 
     // Render and add new task
-    newTaskButton.addEventListener("click", () => {
-        const { dialog, form, inputs } = addTaskDialog();
-
-        contentDiv.appendChild(dialog);
-
-        form.addEventListener("submit", (e) => {
-            e.preventDefault();
-
-            // Create a new task using inputs
-            const name = inputs.taskInput.value;
-            const desc = inputs.descTextarea.value;
-            let due;
-            if (inputs.dueInput.value === "") {
-                due = format(new Date(), "yyyy-MM-dd");
-            } else {
-                due = inputs.dueInput.value;
-            }
-            const prio = inputs.prioritySelect.value;
-            const task = new Task(name, desc, due, prio, list.activeProject);
-
-            // Add the task to the current project
-            list.activeProject.addTask(task);
-            saveProjects();
-
+    newTaskButton.addEventListener("click", async () => {
+        try {
+            const task = await addTaskDialog();
             const taskCard = createTaskCard(task);
-            tasksContainer.appendChild(taskCard);
-
-            console.log(task);
-
-            utils.handleFormClose(form, dialog);
-        });
+            tasksContainer.appendChild(taskCard)
+            
+        } catch (err) {
+            console.log("Dialog canceled or error", err)
+        }
     });
 
     editProjectButton.addEventListener("click", () => {

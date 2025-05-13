@@ -1,139 +1,158 @@
-import * as utils from "../../utils"
+import { handleFormClose } from "../../utils";
+import { Task } from "../../task";
+import { format } from "date-fns";
+import { list } from "../../projects-list";
+import { saveProjects } from "../../storage";
 
 export default function addTaskDialog() {
-    // Create the dialog element
-    const dialog = document.createElement("dialog");
-    dialog.classList.add("dialog");
-    dialog.setAttribute("open", "");
+    return new Promise((resolve, reject) => {
+        // Create the dialog element
+        const dialog = document.createElement("dialog");
+        dialog.classList.add("dialog");
+        dialog.setAttribute("open", "");
 
-    // Create the form element
-    const form = document.createElement("form");
-    form.classList.add("form");
-    form.setAttribute("method", "dialog");
+        // Create the form element
+        const form = document.createElement("form");
+        form.classList.add("form");
+        form.setAttribute("method", "dialog");
 
-    // Create Task name Section
-    const taskGroup = document.createElement("div");
-    taskGroup.classList.add("form-group");
+        // Create Task name Section
+        const taskGroup = document.createElement("div");
+        taskGroup.classList.add("form-group");
 
-    const taskLabel = document.createElement("label");
-    taskLabel.setAttribute("for", "task");
-    taskLabel.textContent = "Task:";
-    taskGroup.appendChild(taskLabel);
+        const taskLabel = document.createElement("label");
+        taskLabel.setAttribute("for", "task");
+        taskLabel.textContent = "Task:";
+        taskGroup.appendChild(taskLabel);
 
-    const taskInput = document.createElement("input");
-    taskInput.setAttribute("type", "text");
-    taskInput.setAttribute("name", "task");
-    taskInput.setAttribute("id", "task");
-    taskInput.setAttribute("required", "");
-    taskInput.setAttribute("autocomplete", "off");
-    taskGroup.appendChild(taskInput);
+        const taskInput = document.createElement("input");
+        taskInput.setAttribute("type", "text");
+        taskInput.setAttribute("name", "task");
+        taskInput.setAttribute("id", "task");
+        taskInput.setAttribute("required", "");
+        taskInput.setAttribute("autocomplete", "off");
+        taskGroup.appendChild(taskInput);
 
-    // Append task group to form
-    form.appendChild(taskGroup);
+        // Append task group to form
+        form.appendChild(taskGroup);
 
-    // Create Description Textarea Section
-    const descGroup = document.createElement("div");
-    descGroup.classList.add("form-group");
+        // Create Description Textarea Section
+        const descGroup = document.createElement("div");
+        descGroup.classList.add("form-group");
 
-    const descLabel = document.createElement("label");
-    descLabel.setAttribute("for", "desc");
-    descLabel.textContent = "Description:";
-    descGroup.appendChild(descLabel);
+        const descLabel = document.createElement("label");
+        descLabel.setAttribute("for", "desc");
+        descLabel.textContent = "Description:";
+        descGroup.appendChild(descLabel);
 
-    const descTextarea = document.createElement("textarea");
-    descTextarea.setAttribute("name", "desc");
-    descTextarea.setAttribute("id", "desc");
-    descGroup.appendChild(descTextarea);
+        const descTextarea = document.createElement("textarea");
+        descTextarea.setAttribute("name", "desc");
+        descTextarea.setAttribute("id", "desc");
+        descGroup.appendChild(descTextarea);
 
-    // Append description group to form
-    form.appendChild(descGroup);
+        // Append description group to form
+        form.appendChild(descGroup);
 
-    // Create Due Date Input Section
-    const dueGroup = document.createElement("div");
-    dueGroup.classList.add("form-group");
+        // Create Due Date Input Section
+        const dueGroup = document.createElement("div");
+        dueGroup.classList.add("form-group");
 
-    const dueLabel = document.createElement("label");
-    dueLabel.setAttribute("for", "due");
-    dueLabel.textContent = "Due Date:";
-    dueGroup.appendChild(dueLabel);
+        const dueLabel = document.createElement("label");
+        dueLabel.setAttribute("for", "due");
+        dueLabel.textContent = "Due Date:";
+        dueGroup.appendChild(dueLabel);
 
-    const dueInput = document.createElement("input");
-    dueInput.setAttribute("type", "date");
-    dueInput.setAttribute("name", "due");
-    dueInput.setAttribute("id", "due");
-    // dueInput.setAttribute("required", "");
-    dueGroup.appendChild(dueInput);
+        const dueInput = document.createElement("input");
+        dueInput.setAttribute("type", "date");
+        dueInput.setAttribute("name", "due");
+        dueInput.setAttribute("id", "due");
+        // dueInput.setAttribute("required", "");
+        dueGroup.appendChild(dueInput);
 
-    // Append due group to form
-    form.appendChild(dueGroup);
+        // Append due group to form
+        form.appendChild(dueGroup);
 
-    // Create Priority Select Section
-    const priorityGroup = document.createElement("div");
-    priorityGroup.classList.add("form-group");
+        // Create Priority Select Section
+        const priorityGroup = document.createElement("div");
+        priorityGroup.classList.add("form-group");
 
-    const priorityLabel = document.createElement("label");
-    priorityLabel.setAttribute("for", "priority");
-    priorityLabel.textContent = "Priority:";
-    priorityGroup.appendChild(priorityLabel);
+        const priorityLabel = document.createElement("label");
+        priorityLabel.setAttribute("for", "priority");
+        priorityLabel.textContent = "Priority:";
+        priorityGroup.appendChild(priorityLabel);
 
-    const prioritySelect = document.createElement("select");
-    prioritySelect.setAttribute("id", "priority");
-    prioritySelect.setAttribute("name", "priority");
-    prioritySelect.setAttribute("required", "");
+        const prioritySelect = document.createElement("select");
+        prioritySelect.setAttribute("id", "priority");
+        prioritySelect.setAttribute("name", "priority");
+        prioritySelect.setAttribute("required", "");
 
-    const optionDefault = document.createElement("option");
-    optionDefault.setAttribute("value", "");
-    optionDefault.textContent = "--Select--";
-    prioritySelect.appendChild(optionDefault);
+        const optionDefault = document.createElement("option");
+        optionDefault.setAttribute("value", "");
+        optionDefault.textContent = "--Select--";
+        prioritySelect.appendChild(optionDefault);
 
-    for (let i = 1; i <= 5; i++) {
-        const option = document.createElement("option");
-        option.setAttribute("value", i);
-        option.textContent = i;
-        prioritySelect.appendChild(option);
-    }
+        for (let i = 1; i <= 5; i++) {
+            const option = document.createElement("option");
+            option.setAttribute("value", i);
+            option.textContent = i;
+            prioritySelect.appendChild(option);
+        }
 
-    // Append priority group to form
-    priorityGroup.appendChild(prioritySelect);
-    form.appendChild(priorityGroup);
+        // Append priority group to form
+        priorityGroup.appendChild(prioritySelect);
+        form.appendChild(priorityGroup);
 
-    // Create Button Group
-    const buttonGroup = document.createElement("div");
-    buttonGroup.classList.add("button-group");
+        // Create Button Group
+        const buttonGroup = document.createElement("div");
+        buttonGroup.classList.add("button-group");
 
-    // Create Cancel Button
-    const cancelButton = document.createElement("button");
-    cancelButton.classList.add("form-button");
-    cancelButton.textContent = "Cancel";
-    buttonGroup.appendChild(cancelButton);
+        // Create Cancel Button
+        const cancelButton = document.createElement("button");
+        cancelButton.classList.add("form-button");
+        cancelButton.textContent = "Cancel";
+        buttonGroup.appendChild(cancelButton);
 
-    cancelButton.addEventListener("click", (e) => {
-        e.preventDefault();
+        cancelButton.addEventListener("click", (e) => {
+            e.preventDefault();
+            handleFormClose(form, dialog);
+            reject("Form closed. User canceled")
+        });
 
-        utils.handleFormClose(form, dialog)
+        // Create Submit Button
+        const submitButton = document.createElement("button");
+        submitButton.classList.add("form-button");
+        submitButton.setAttribute("type", "submit");
+        submitButton.textContent = "Submit";
+        buttonGroup.appendChild(submitButton);
+
+        // Append button group to form
+        form.appendChild(buttonGroup);
+
+        // Append form to dialog
+        dialog.appendChild(form);
+        document.body.appendChild(dialog);
+        taskInput.focus();
+
+        form.addEventListener("submit", (e) => {
+            e.preventDefault();
+
+            // Create a new task using inputs
+            const name = taskInput.value;
+            const desc = descTextarea.value;
+            let due;
+            if (dueInput.value === "") {
+                due = format(new Date(), "yyyy-MM-dd");
+            } else {
+                due = dueInput.value;
+            }
+            const prio = prioritySelect.value;
+
+            const task = new Task(name, desc, due, prio, list.activeProject);
+            list.activeProject.addTask(task);
+            saveProjects();
+
+            handleFormClose(form, dialog);
+            resolve(task);
+        });
     });
-
-    // Create Submit Button
-    const submitButton = document.createElement("button");
-    submitButton.classList.add("form-button");
-    submitButton.setAttribute("type", "submit");
-    submitButton.textContent = "Submit";
-    buttonGroup.appendChild(submitButton);
-
-    // Append button group to form
-    form.appendChild(buttonGroup);
-
-    // Append form to dialog
-    dialog.appendChild(form);
-
-    return {
-        dialog,
-        form,
-        inputs: {
-            taskInput,
-            descTextarea,
-            dueInput,
-            prioritySelect,
-        },
-    };
 }

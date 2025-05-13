@@ -40,7 +40,7 @@ class ProjectsList {
 
     removeProject(project) {
         // Prevent removal of the default project
-        if (project.id === this.#defaultProject.id) {
+        if (project.id === this.defaultProject.id) {
             console.log("Cannot remove the default project.");
             return;
         }

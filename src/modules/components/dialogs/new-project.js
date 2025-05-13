@@ -1,6 +1,7 @@
 import { Project } from "../../project";
 import { list } from "../../projects-list";
 import { handleFormClose } from "../../utils";
+import { saveProjects } from "../../storage";
 
 export default function addProjectDialog() {
     return new Promise((resolve, reject) => {
@@ -68,6 +69,7 @@ export default function addProjectDialog() {
 
             const project = new Project(projectName.value);
             list.addProject(project);
+            saveProjects();
 
             handleFormClose(form, dialog);
             resolve(project);
