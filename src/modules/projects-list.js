@@ -13,11 +13,11 @@ class ProjectsList {
         // Create the default project and add it to the list
         this.#defaultProject = new Project("Default");
         this.#projectsList.push(this.#defaultProject);
-        this.#activeProject = this.#defaultProject
+        this.#activeProject = this.#defaultProject;
     }
 
     get activeProject() {
-        return this.#activeProject
+        return this.#activeProject;
     }
 
     set activeProject(newActiveProject) {
@@ -26,7 +26,7 @@ class ProjectsList {
 
     // Get the default project from local storage instead of from page load.
     get defaultProject() {
-        return list.getAllProjects()[0]
+        return list.getAllProjects()[0];
     }
 
     addProject(projectToAdd) {
@@ -34,14 +34,24 @@ class ProjectsList {
         if (!this.getProjectByName(projectToAdd.name)) {
             this.#projectsList.push(projectToAdd);
         } else {
-            console.log(`Project '${projectToAdd.name}' already exists`);
+            alert("Project name already exists");
+        }
+    }
+
+    // Check if the project name already exists
+    checkProjectName(projectName) {
+        // Return true if it doesn't exist, false otherwise
+        if (!this.getProjectByName(projectName)) {
+            return true;
+        } else {
+            return false;
         }
     }
 
     removeProject(project) {
         // Prevent removal of the default project
         if (project.id === this.defaultProject.id) {
-            console.log("Cannot remove the default project.");
+            alert("Cannot delete 'default' project");
             return;
         }
 

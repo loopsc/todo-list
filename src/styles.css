@@ -39,6 +39,8 @@ body {
     box-shadow: var(--shadow);
     gap: 20px;
     min-width: 250px;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .projects-list {
@@ -120,6 +122,8 @@ button:hover {
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
     padding: 2rem;
+    overflow-y: auto;
+    min-height: 0;
 }
 
 .task-div {
@@ -128,7 +132,25 @@ button:hover {
     padding: 16px;
     box-shadow: var(--shadow);
     transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+
+    position: relative;
 }
+
+.priority-indicator {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 0;
+    height: 0;
+    border-top: 30px solid red;
+    border-right: 30px solid transparent;
+    z-index: 2;
+    border-top-left-radius: 8px;
+}
+
 
 .task-div:hover:not(.editing) {
     transform: scale(1.03);
@@ -144,7 +166,7 @@ button:hover {
 .task-buttons {
     display: none;
     justify-content: center;
-    margin-top: 12px;
+    margin-top: auto;
     gap: 0.5rem;
 }
 
@@ -165,49 +187,101 @@ button:hover {
 
 .dialog {
     background-color: white;
-    padding: 24px;
+    padding: 32px;
     border-radius: var(--radius);
-    box-shadow: var(--shadow);
-    position: absolute;
-    top: 20%;
-    left: 10%;
-    z-index: 10;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    position: fixed;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 100;
+    min-width: 320px;
+    max-width: 420px;
+    width: 90%;
+    margin: 0;
+    animation: fadeIn 0.25s ease-in-out;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -46%);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, -50%);
+    }
 }
 
 .form {
     display: flex;
     flex-direction: column;
-    gap: 16px;
+    gap: 20px;
 }
 
 .form-group label {
     font-weight: 600;
     color: var(--text-dark);
+    margin-bottom: 6px;
 }
 
 .form input,
 .form textarea,
 .form select {
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid var(--cadet-gray);
-    padding: 10px;
+    padding: 12px;
     font-size: 1rem;
     width: 100%;
+    background-color: white;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.form input:focus {
+    border-color: var(--powder-blue);
+    box-shadow: 0 0 4px var(--powder-blue);
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.save-cancel-group {
+    display: flex;
+    justify-content: space-between;
+    gap: 8px;
 }
 
 .form-button {
+    flex: 1;
     background-color: var(--accent);
     color: white;
     font-weight: bold;
     border-radius: var(--radius);
     padding: 10px 16px;
     font-size: 1rem;
+    transition: background-color 0.2s ease;
 }
 
-.button-group {
+.form-button:hover {
+    background-color: #3b6bdc;
+}
+
+.form-button.delete {
+    background-color: #e74c3c;
+}
+
+.form-button.delete:hover {
+    background-color: #c0392b;
+}
+
+.delete-button-group {
     display: flex;
-    justify-content: center;
-    gap: 12px;
+    flex-direction: column;
+    gap: 8px;
 }
 
 .task-div.completed {
@@ -240,6 +314,8 @@ button:hover {
     box-shadow: 0 0 6px var(--powder-blue);
 }
 
-.form-button.delete {
-    background-color: red;
+.task-title,
+.task-desc {
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }

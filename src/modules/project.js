@@ -30,6 +30,10 @@ class Project {
         this.#tasksList = this.#tasksList.filter((t) => t.id !== task.id);
     }
 
+    removeAllTasks() {
+        this.#tasksList.length = 0
+    }
+
     toJSON() {
         return {
             name: this.name,

@@ -39,6 +39,7 @@ export default function editProjectDialog(project) {
 
         // Div to hold save and cancel buttons
         const saveCancelButtonsGroup = document.createElement("div");
+        saveCancelButtonsGroup.classList.add("save-cancel-group");
         saveCancelButtonsGroup.style.display = "flex";
         saveCancelButtonsGroup.style.gap = "2px";
 
@@ -76,17 +77,39 @@ export default function editProjectDialog(project) {
         deleteButton.addEventListener("click", (e) => {
             e.preventDefault();
 
-            // Delete the current project and save data to local storage
-            list.removeProject(list.activeProject);
-            saveProjects();
-            // Return user to the default project when a project is deleted
-            list.activeProject = list.defaultProject;
+            if (confirm("Are you sure you want to delete this project?")) {
+                // Delete the current project and save data to local storage
+                list.removeProject(list.activeProject);
+                saveProjects();
+                // Return user to the default project when a project is deleted
+                list.activeProject = list.defaultProject;
 
-            handleFormClose(form, dialog);
-            resolve();
+                handleFormClose(form, dialog);
+                resolve();
+            }
+        });
+
+        const deleteTasksButton = document.createElement("button");
+        deleteTasksButton.setAttribute("type", "button");
+        deleteTasksButton.classList.add("form-button");
+        deleteTasksButton.classList.add("delete");
+        deleteTasksButton.setAttribute("id", "deleteTasks");
+        deleteTasksButton.textContent = "Delete all tasks";
+
+        deleteTasksButton.addEventListener("click", (e) => {
+            e.preventDefault();
+
+            if (confirm("Are you sure you want to delete all tasks?")) {
+                list.activeProject.removeAllTasks();
+                saveProjects();
+
+                handleFormClose(form, dialog);
+                resolve();
+            }
         });
 
         deleteButtonGroup.appendChild(deleteButton);
+        deleteButtonGroup.appendChild(deleteTasksButton);
 
         buttonsGroup.append(saveCancelButtonsGroup, deleteButtonGroup);
 
@@ -96,7 +119,7 @@ export default function editProjectDialog(project) {
             list.activeProject.name = newNameInput.value;
             saveProjects();
 
-            handleFormClose(form, dialog)
+            handleFormClose(form, dialog);
             resolve();
         });
 

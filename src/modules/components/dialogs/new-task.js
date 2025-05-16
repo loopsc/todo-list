@@ -1,6 +1,6 @@
 import { handleFormClose } from "../../utils";
 import { Task } from "../../task";
-import { format } from "date-fns";
+import { format, parseISO, isBefore, startOfToday } from "date-fns";
 import { list } from "../../projects-list";
 import { saveProjects } from "../../storage";
 
@@ -109,13 +109,14 @@ export default function addTaskDialog() {
         // Create Cancel Button
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("form-button");
+        cancelButton.setAttribute("type", "button")
         cancelButton.textContent = "Cancel";
         buttonGroup.appendChild(cancelButton);
 
         cancelButton.addEventListener("click", (e) => {
             e.preventDefault();
             handleFormClose(form, dialog);
-            reject("Form closed. User canceled")
+            reject("Form closed. User canceled");
         });
 
         // Create Submit Button
@@ -140,6 +141,7 @@ export default function addTaskDialog() {
             const name = taskInput.value;
             const desc = descTextarea.value;
             let due;
+            // Choose current date if not specified
             if (dueInput.value === "") {
                 due = format(new Date(), "yyyy-MM-dd");
             } else {
@@ -147,12 +149,18 @@ export default function addTaskDialog() {
             }
             const prio = prioritySelect.value;
 
-            const task = new Task(name, desc, due, prio, list.activeProject);
-            list.activeProject.addTask(task);
-            saveProjects();
+            if (!isBefore(parseISO(due), startOfToday())) {
+                // prettier-ignore
+                const task = new Task(name, desc, due, prio, list.activeProject);
 
-            handleFormClose(form, dialog);
-            resolve(task);
+                list.activeProject.addTask(task);
+                saveProjects();
+
+                handleFormClose(form, dialog);
+                resolve(task);
+            } else {
+                alert("Cannot choose a date in the past")
+            }
         });
     });
 }

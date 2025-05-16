@@ -9,7 +9,13 @@ import { saveProjects } from "../storage";
 export default function createTaskCard(task) {
     const card = document.createElement("div");
     card.classList.add("task-div");
-    task.isComplete ? card.classList.add("completed") : card.classList.remove("completed")
+    task.isComplete
+        ? card.classList.add("completed")
+        : card.classList.remove("completed");
+
+    const priorityIndicator = document.createElement("div");
+    priorityIndicator.classList.add("priority-indicator");
+    card.appendChild(priorityIndicator);
 
     const title = document.createElement("p");
     title.classList.add("task-title");
@@ -27,14 +33,16 @@ export default function createTaskCard(task) {
     prio.classList.add("task-priority");
     prio.textContent = `Priority: ${task.prio}`;
 
-    // Input fields (initially hidden)
+    // Input fields
     const titleInput = document.createElement("input");
     titleInput.classList.add("task-inputs");
+    titleInput.setAttribute("maxlength", "15");
     titleInput.value = task.title;
     titleInput.style.display = "none";
 
     const descInput = document.createElement("textarea");
     descInput.classList.add("task-inputs");
+    descInput.setAttribute("maxlength", "200");
     descInput.value = task.desc;
     descInput.style.display = "none";
 
@@ -50,7 +58,7 @@ export default function createTaskCard(task) {
     const placeholderOption = document.createElement("option");
     placeholderOption.textContent = "--Priority--";
     placeholderOption.disabled = true;
-    prioInput.appendChild(placeholderOption)
+    prioInput.appendChild(placeholderOption);
 
     for (let i = 1; i <= 5; i++) {
         const opt = document.createElement("option");
@@ -60,6 +68,26 @@ export default function createTaskCard(task) {
         prioInput.appendChild(opt);
     }
     prioInput.style.display = "none";
+
+    showPriorityIndicator(prioInput.value, priorityIndicator);
+
+    // switch (prioInput.value) {
+    //     case "1":
+    //         priorityIndicator.style.borderTopColor = "lightgreen";
+    //         break;
+    //     case "2":
+    //         priorityIndicator.style.borderTopColor = "green";
+    //         break;
+    //     case "3":
+    //         priorityIndicator.style.borderTopColor = "yellow";
+    //         break;
+    //     case "4":
+    //         priorityIndicator.style.borderTopColor = "orange";
+    //         break;
+    //     case "5":
+    //         priorityIndicator.style.borderTopColor = "red";
+    //         break;
+    // }
 
     // Buttons
     const buttonGroup = document.createElement("div");
@@ -87,14 +115,10 @@ export default function createTaskCard(task) {
     deleteButton.textContent = "Delete";
     deleteButton.classList.add("delete-btn");
 
-    buttonGroup.append(
-        editButton,
-        saveButton,
-        cancelButton,
-        completeButton,
-        deleteButton
-    );
-    card.append(
+    const contentGroup = document.createElement("div");
+    contentGroup.classList.add("task-content");
+
+    contentGroup.append(
         title,
         titleInput,
         desc,
@@ -102,11 +126,19 @@ export default function createTaskCard(task) {
         due,
         dueInput,
         prio,
-        prioInput,
-        buttonGroup
+        prioInput
     );
 
-    card.addEventListener("click", () => console.log(task))
+    buttonGroup.append(
+        editButton,
+        saveButton,
+        cancelButton,
+        completeButton,
+        deleteButton
+    );
+    card.append(contentGroup, buttonGroup);
+
+    card.addEventListener("click", () => console.log(task));
 
     editButton.addEventListener("click", () => {
         card.classList.add("editing");
@@ -117,9 +149,11 @@ export default function createTaskCard(task) {
             (el) => (el.style.display = "block")
         );
 
+        // Hide 'edit', 'complete' and 'delete' button when in edit mode
         [editButton, completeButton, deleteButton].forEach(
             (el) => (el.style.display = "none")
         );
+        // Show 'save' and 'cancel' button when in edit mode
         [saveButton, cancelButton].forEach(
             (el) => (el.style.display = "inline")
         );
@@ -137,6 +171,8 @@ export default function createTaskCard(task) {
         desc.textContent = task.desc;
         due.textContent = `Due: ${task.dueDate}`;
         prio.textContent = `Priority: ${task.prio}`;
+
+        showPriorityIndicator(prioInput.value, priorityIndicator);
 
         // Hide the inputs and show labels
         [title, desc, due, prio].forEach((el) => (el.style.display = "block"));
@@ -167,7 +203,6 @@ export default function createTaskCard(task) {
         );
     });
 
-
     completeButton.addEventListener("click", () => {
         task.toggleComplete();
 
@@ -183,11 +218,33 @@ export default function createTaskCard(task) {
     });
 
     deleteButton.addEventListener("click", () => {
-        task.project.removeTask(task);
+        if (confirm("Are you sure you want to delete this task?")) {
+            task.project.removeTask(task);
 
-        card.remove()
-        saveProjects();
-    })
+            card.remove();
+            saveProjects();
+        }
+    });
 
     return card;
+}
+
+function showPriorityIndicator(priority, corner) {
+    switch (priority) {
+        case "1":
+            corner.style.borderTopColor = "lightgreen";
+            break;
+        case "2":
+            corner.style.borderTopColor = "green";
+            break;
+        case "3":
+            corner.style.borderTopColor = "yellow";
+            break;
+        case "4":
+            corner.style.borderTopColor = "orange";
+            break;
+        case "5":
+            corner.style.borderTopColor = "red";
+            break;
+    }
 }

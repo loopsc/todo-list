@@ -38,6 +38,7 @@ export default function addProjectDialog() {
         // Create Cancel Button
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("form-button");
+        cancelButton.setAttribute("type", "button")
         cancelButton.textContent = "Cancel";
         buttonGroup.appendChild(cancelButton);
 
@@ -61,12 +62,17 @@ export default function addProjectDialog() {
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
-            const project = new Project(projectName.value);
-            list.addProject(project);
-            saveProjects();
+            if (list.checkProjectName(projectName.value)) {
+                const project = new Project(projectName.value);
 
-            handleFormClose(form, dialog);
-            resolve(project);
+                list.addProject(project);
+                saveProjects();
+
+                handleFormClose(form, dialog);
+                resolve(project);
+            } else {
+                alert("Project name already exists")
+            }
         });
 
         // Append form to dialog
