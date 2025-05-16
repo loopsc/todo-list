@@ -3,9 +3,8 @@ import addProjectDialog from "./components/dialogs/new-project";
 import createTaskCard from "./components/task-card";
 import { Project } from "./project";
 import { list } from "./projects-list";
-import { saveProjects, loadProjects } from "./storage";
+import { loadProjects } from "./storage";
 import editProjectDialog from "./components/dialogs/edit-project";
-import * as utils from "./utils";
 
 function renderTasks(projectNameHeading, tasksContainer) {
     projectNameHeading.textContent = list.activeProject.name;
@@ -37,7 +36,6 @@ function createProjectButton(project) {
 
 export default function render() {
     const newTaskButton = document.querySelector(".new-task-button");
-    const contentDiv = document.querySelector(".content");
     const tasksContainer = document.querySelector(".tasks-container");
     const newProjectButton = document.querySelector(".new-project-button");
     const projectsListDiv = document.querySelector(".projects-list");
