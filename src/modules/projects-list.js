@@ -10,7 +10,7 @@ class ProjectsList {
     }
 
     init() {
-        // Create the default project and add it to the list
+        // Create the default project, add it to the list and set as the active project
         this.#defaultProject = new Project("Default");
         this.#projectsList.push(this.#defaultProject);
         this.#activeProject = this.#defaultProject;

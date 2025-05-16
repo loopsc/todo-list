@@ -1,6 +1,6 @@
 import { list } from "../../projects-list";
 import { saveProjects } from "../../storage";
-import { handleFormClose } from "../../utils";
+import { attachEscapeHandler, handleFormClose } from "../../utils";
 
 export default function editProjectDialog(project) {
     return new Promise((resolve, reject) => {
@@ -127,5 +127,7 @@ export default function editProjectDialog(project) {
 
         document.body.appendChild(dialog);
         newNameInput.focus();
+
+        attachEscapeHandler(dialog, form, reject)
     });
 }

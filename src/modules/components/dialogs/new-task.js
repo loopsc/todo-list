@@ -1,4 +1,4 @@
-import { handleFormClose } from "../../utils";
+import { attachEscapeHandler, handleFormClose } from "../../utils";
 import { Task } from "../../task";
 import { format, parseISO, isBefore, startOfToday } from "date-fns";
 import { list } from "../../projects-list";
@@ -109,7 +109,7 @@ export default function addTaskDialog() {
         // Create Cancel Button
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("form-button");
-        cancelButton.setAttribute("type", "button")
+        cancelButton.setAttribute("type", "button");
         cancelButton.textContent = "Cancel";
         buttonGroup.appendChild(cancelButton);
 
@@ -124,15 +124,6 @@ export default function addTaskDialog() {
         submitButton.classList.add("form-button");
         submitButton.setAttribute("type", "submit");
         submitButton.textContent = "Submit";
-        buttonGroup.appendChild(submitButton);
-
-        // Append button group to form
-        form.appendChild(buttonGroup);
-
-        // Append form to dialog
-        dialog.appendChild(form);
-        document.body.appendChild(dialog);
-        taskInput.focus();
 
         form.addEventListener("submit", (e) => {
             e.preventDefault();
@@ -159,8 +150,20 @@ export default function addTaskDialog() {
                 handleFormClose(form, dialog);
                 resolve(task);
             } else {
-                alert("Cannot choose a date in the past")
+                alert("Cannot choose a date in the past");
             }
         });
+
+        buttonGroup.appendChild(submitButton);
+
+        // Append button group to form
+        form.appendChild(buttonGroup);
+
+        // Append form to dialog
+        dialog.appendChild(form);
+        document.body.appendChild(dialog);
+        taskInput.focus();
+
+        attachEscapeHandler(dialog, form, reject);
     });
 }

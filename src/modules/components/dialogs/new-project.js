@@ -1,6 +1,6 @@
 import { Project } from "../../project";
 import { list } from "../../projects-list";
-import { handleFormClose } from "../../utils";
+import { attachEscapeHandler, handleFormClose } from "../../utils";
 import { saveProjects } from "../../storage";
 
 export default function addProjectDialog() {
@@ -38,7 +38,7 @@ export default function addProjectDialog() {
         // Create Cancel Button
         const cancelButton = document.createElement("button");
         cancelButton.classList.add("form-button");
-        cancelButton.setAttribute("type", "button")
+        cancelButton.setAttribute("type", "button");
         cancelButton.textContent = "Cancel";
         buttonGroup.appendChild(cancelButton);
 
@@ -71,7 +71,7 @@ export default function addProjectDialog() {
                 handleFormClose(form, dialog);
                 resolve(project);
             } else {
-                alert("Project name already exists")
+                alert("Project name already exists");
             }
         });
 
@@ -80,5 +80,16 @@ export default function addProjectDialog() {
 
         document.body.appendChild(dialog);
         projectName.focus();
+
+        dialog.addEventListener("keyup", (e) => {
+            if (e.key === "Escape") {
+                e.preventDefault();
+                console.log(e)
+                handleFormClose(form, dialog);
+                reject("Form closed. User canceled");
+            }
+        });
+
+        attachEscapeHandler(dialog, form, reject)
     });
 }
