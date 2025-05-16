@@ -90,9 +90,9 @@ export default function render() {
 
             projectButton.addEventListener("click", () => {
                 makeProjectActive(project);
-            })
+            });
         } catch (err) {
-            console.log("Dialog canceled or error", err)
+            console.log("Dialog canceled or error", err);
         }
     });
 
@@ -101,37 +101,20 @@ export default function render() {
         try {
             const task = await addTaskDialog();
             const taskCard = createTaskCard(task);
-            tasksContainer.appendChild(taskCard)
-            
+            tasksContainer.appendChild(taskCard);
         } catch (err) {
-            console.log("Dialog canceled or error", err)
+            console.log("Dialog canceled or error", err);
         }
     });
 
-    editProjectButton.addEventListener("click", () => {
-        // prettier-ignore
-        const { dialog, form, newNameInput, deleteButton } = editProjectDialog(list.activeProject);
-
-        contentDiv.appendChild(dialog);
-
-        form.addEventListener("submit", () => {
-            list.activeProject.name = newNameInput.value;
-
-            saveProjects();
-            renderProjectButtons(projectsListDiv);
-            renderTasks(projectNameHeading, tasksContainer);
-        });
-
-        deleteButton.addEventListener("click", () => {
-            list.removeProject(list.activeProject);
-
-            saveProjects();
+    editProjectButton.addEventListener("click", async () => {
+        try {
+            await editProjectDialog(list.activeProject);
 
             renderProjectButtons(projectsListDiv);
-            list.activeProject = list.defaultProject;
             renderTasks(projectNameHeading, tasksContainer);
-
-            utils.handleFormClose(form, dialog);
-        });
+        } catch (err) {
+            console.log("Dialog canceled or error", err);
+        }
     });
 }

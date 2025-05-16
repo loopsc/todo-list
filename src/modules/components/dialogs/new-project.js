@@ -58,12 +58,6 @@ export default function addProjectDialog() {
         // Append button group to form
         form.appendChild(buttonGroup);
 
-        // Append form to dialog
-        dialog.appendChild(form);
-
-        document.body.appendChild(dialog)
-        projectName.focus();
-
         form.addEventListener("submit", (e) => {
             e.preventDefault();
 
@@ -74,5 +68,11 @@ export default function addProjectDialog() {
             handleFormClose(form, dialog);
             resolve(project);
         });
+
+        // Append form to dialog
+        dialog.appendChild(form);
+
+        document.body.appendChild(dialog);
+        projectName.focus();
     });
 }
