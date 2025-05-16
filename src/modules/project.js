@@ -34,6 +34,7 @@ class Project {
         this.#tasksList.length = 0
     }
 
+    // Convert a Project to a plain object
     toJSON() {
         return {
             name: this.name,
@@ -42,6 +43,8 @@ class Project {
         };
     }
 
+    // Convert plain object project format to Project object format
+    // Populates the project with tasks
     static fromJSON(obj) {
         const project = new Project(obj.name);
         project.#id = obj.id;

@@ -42,7 +42,7 @@ class Task {
         this.#isComplete = !this.#isComplete
     }
 
-    // ???
+    // Convert a Task to a plain object
     toJSON() {
         return {
             title: this.title,

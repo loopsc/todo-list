@@ -1,6 +1,5 @@
 import { list } from "./projects-list";
 import { Project } from "./project";
-import { Task } from "./task";
 
 // Check if storage is available and supported
 function storageAvailable(type) {
@@ -22,27 +21,23 @@ function storageAvailable(type) {
     }
 }
 
+/**
+ * 
+ * @returns Saves list to local storage
+ */
 function saveProjects() {
     if (!storageAvailable("localStorage")) return;
 
-    const allProjects = list.getAllProjects().map((project) => {
-        return {
-            id: project.id,
-            name: project.name,
-            tasks: project.getAllTasks().map((task) => ({
-                id: task.id,
-                title: task.title,
-                desc: task.desc,
-                dueDate: task.dueDate,
-                prio: task.prio,
-                isComplete: task.isComplete,
-            })),
-        };
-    });
+    // Create variable to hold all projects in plain object notation
+    // Basically 'list' but in plain object notation
+    const allProjects = list.getAllProjects().map(project => project.toJSON());
     console.log("Saved to local storage", allProjects);
-    // JSON object of all objects
+
+    // Save projects to local storage as a single JSON string
+    // Converts from plain object notation to single string
     localStorage.setItem("projects", JSON.stringify(allProjects));
 }
+
 
 /**
  *
@@ -55,8 +50,9 @@ function loadProjects() {
         return;
     }
 
-    // json object of all projects saved
+    // json string of all projects saved
     const stored = localStorage.getItem("projects");
+
     // Check if there is any data in local storage
     if (!stored) {
         console.log("Couldn't retrieve items from local storage");
@@ -66,27 +62,14 @@ function loadProjects() {
     // clear the list so there are no duplicate projects when loading
     list.clearAllProjects();
 
-    // Array of all projects
-    const projectDataArray = JSON.parse(stored);
-    console.log("Loading projects from local storage", projectDataArray);
+    // Array of all projects in plain object format
+    const projects = JSON.parse(stored);
+    console.log("Loading projects from local storage", projects);
 
-    // Parse each project from plain objects back into class objects
-    projectDataArray.forEach((projData) => {
-        const project = new Project(projData.name);
-        project.id = projData.id;
-        // For each task in the project, add it back
-        projData.tasks.forEach((taskData) => {
-            const task = new Task(
-                taskData.title,
-                taskData.desc,
-                taskData.dueDate,
-                taskData.prio,
-                project
-            );
-            task.id = taskData.id;
-            task.isComplete = taskData.isComplete;
-            project.addTask(task);
-        });
+    // Convert each plain object project back into a Project object
+    // and add it back to the list
+    projects.forEach(projData => {
+        const project = Project.fromJSON(projData);
         list.addProject(project);
     });
 
