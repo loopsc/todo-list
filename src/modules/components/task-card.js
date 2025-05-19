@@ -1,5 +1,6 @@
 import { Task } from "../task";
 import { saveProjects } from "../storage";
+import { isBefore, parseISO, startOfToday } from "date-fns";
 
 /**
  *
@@ -71,24 +72,6 @@ export default function createTaskCard(task) {
 
     showPriorityIndicator(prioInput.value, priorityIndicator);
 
-    // switch (prioInput.value) {
-    //     case "1":
-    //         priorityIndicator.style.borderTopColor = "lightgreen";
-    //         break;
-    //     case "2":
-    //         priorityIndicator.style.borderTopColor = "green";
-    //         break;
-    //     case "3":
-    //         priorityIndicator.style.borderTopColor = "yellow";
-    //         break;
-    //     case "4":
-    //         priorityIndicator.style.borderTopColor = "orange";
-    //         break;
-    //     case "5":
-    //         priorityIndicator.style.borderTopColor = "red";
-    //         break;
-    // }
-
     // Buttons
     const buttonGroup = document.createElement("div");
     buttonGroup.classList.add("task-buttons");
@@ -141,22 +124,26 @@ export default function createTaskCard(task) {
     card.addEventListener("click", () => console.log(task));
 
     editButton.addEventListener("click", () => {
-        card.classList.add("editing");
+        if (!task.isComplete) {
+            card.classList.add("editing");
 
-        // Hide the labels and show the inputs
-        [title, desc, due, prio].forEach((el) => (el.style.display = "none"));
-        [titleInput, descInput, dueInput, prioInput].forEach(
-            (el) => (el.style.display = "block")
-        );
+            // Hide the labels and show the inputs
+            [title, desc, due, prio].forEach(
+                (el) => (el.style.display = "none")
+            );
+            [titleInput, descInput, dueInput, prioInput].forEach(
+                (el) => (el.style.display = "block")
+            );
 
-        // Hide 'edit', 'complete' and 'delete' button when in edit mode
-        [editButton, completeButton, deleteButton].forEach(
-            (el) => (el.style.display = "none")
-        );
-        // Show 'save' and 'cancel' button when in edit mode
-        [saveButton, cancelButton].forEach(
-            (el) => (el.style.display = "inline")
-        );
+            // Hide 'edit', 'complete' and 'delete' button when in edit mode
+            [editButton, completeButton, deleteButton].forEach(
+                (el) => (el.style.display = "none")
+            );
+            // Show 'save' and 'cancel' button when in edit mode
+            [saveButton, cancelButton].forEach(
+                (el) => (el.style.display = "inline")
+            );
+        }
     });
 
     saveButton.addEventListener("click", () => {
@@ -164,7 +151,12 @@ export default function createTaskCard(task) {
 
         task.title = titleInput.value;
         task.desc = descInput.value;
-        task.dueDate = dueInput.value;
+        if (!isBefore(parseISO(dueInput.value), startOfToday())) {
+            task.dueDate = dueInput.value;
+        } else {
+            alert("Cannot choose a date in the past");
+        }
+
         task.prio = prioInput.value;
 
         title.textContent = `Title: ${task.title}`;

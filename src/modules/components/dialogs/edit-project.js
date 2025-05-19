@@ -7,7 +7,6 @@ export default function editProjectDialog(project) {
         // Dialog element
         const dialog = document.createElement("dialog");
         dialog.classList.add("dialog");
-        dialog.setAttribute("open", "");
 
         // Form element
         const form = document.createElement("form");
@@ -126,8 +125,9 @@ export default function editProjectDialog(project) {
         dialog.appendChild(form);
 
         document.body.appendChild(dialog);
+        dialog.showModal();
         newNameInput.focus();
 
-        attachEscapeHandler(dialog, form, reject)
+        attachEscapeHandler(dialog, form, reject);
     });
 }

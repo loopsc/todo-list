@@ -7,7 +7,6 @@ export default function addProjectDialog() {
     return new Promise((resolve, reject) => {
         const dialog = document.createElement("dialog");
         dialog.classList.add("dialog");
-        dialog.setAttribute("open", "");
 
         const form = document.createElement("form");
         form.classList.add("form");
@@ -79,6 +78,7 @@ export default function addProjectDialog() {
         dialog.appendChild(form);
 
         document.body.appendChild(dialog);
+        dialog.showModal()
         projectName.focus();
 
         dialog.addEventListener("keyup", (e) => {

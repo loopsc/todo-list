@@ -290,9 +290,7 @@ button:hover {
     opacity: 0.75;
 }
 
-.task-div.completed * {
-    text-decoration: line-through;
-}
+
 
 .task-inputs {
     display: block;

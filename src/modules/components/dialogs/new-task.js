@@ -9,7 +9,6 @@ export default function addTaskDialog() {
         // Create the dialog element
         const dialog = document.createElement("dialog");
         dialog.classList.add("dialog");
-        dialog.setAttribute("open", "");
 
         // Create the form element
         const form = document.createElement("form");
@@ -162,6 +161,7 @@ export default function addTaskDialog() {
         // Append form to dialog
         dialog.appendChild(form);
         document.body.appendChild(dialog);
+        dialog.showModal();
         taskInput.focus();
 
         attachEscapeHandler(dialog, form, reject);
