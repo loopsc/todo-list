@@ -8,6 +8,7 @@ class Project {
         this.name = name;
         this.#tasksList = [];
         this.#id = crypto.randomUUID();
+        this.colour = '#85b7bb';
     }
 
     get id() {
@@ -39,7 +40,8 @@ class Project {
         return {
             name: this.name,
             id: this.id,
-            tasks: this.getAllTasks().map(task => task.toJSON())
+            tasks: this.getAllTasks().map(task => task.toJSON()),
+            colour: this.colour
         };
     }
 
@@ -52,6 +54,7 @@ class Project {
             const task = Task.fromJSON(taskData, project);
             project.addTask(task);
         });
+        project.colour = obj.colour
         return project;
     }
 }

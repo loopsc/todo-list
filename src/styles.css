@@ -3,10 +3,11 @@
     --secondary: #e1e5f2;
     --cool-gray: #6c7a89;
     --powder-blue: #7ea9e1;
-    --cadet-gray: #85b7bb;
+    --saturated-teal: #85b7bb;
     --accent: #4b7bec;
     --text-dark: #2c3e50;
     --text-light: #ecf0f1;
+    --alarm-red: #e46464;
     --radius: 12px;
     --shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
@@ -69,7 +70,8 @@ button:hover {
 }
 
 .projects-button {
-    background-color: var(--cool-gray);
+    background-color: var(--saturated-teal);
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .new-task-button {
@@ -86,8 +88,16 @@ button:hover {
     top: 1rem;
 }
 
+.edit-colours-button {
+    align-self: flex-end;
+    position: absolute;
+    right: 2rem;
+    bottom: 1rem;
+}
+
 .new-project-button {
     background-color: var(--accent);
+    
 }
 
 .content {
@@ -101,7 +111,7 @@ button:hover {
 }
 
 .content-header-bar {
-    background-color: var(--cadet-gray);
+    background-color: var(--saturated-teal);
     padding: 1.5rem 2rem;
     display: flex;
     align-items: center;
@@ -115,6 +125,7 @@ button:hover {
     font-weight: bold;
     color: white;
     text-align: center;
+    text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
 .tasks-container {
@@ -151,7 +162,6 @@ button:hover {
     border-top-left-radius: 8px;
 }
 
-
 .task-div:hover:not(.editing) {
     transform: scale(1.03);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
@@ -183,6 +193,10 @@ button:hover {
 
 .task-buttons button:hover {
     background-color: var(--accent);
+}
+
+.task-div.completed .edit-btn:hover {
+    background-color: var(--cool-gray);
 }
 
 .dialog {
@@ -229,7 +243,7 @@ button:hover {
 .form textarea,
 .form select {
     border-radius: 8px;
-    border: 1px solid var(--cadet-gray);
+    border: 1px solid var(--saturated-teal);
     padding: 12px;
     font-size: 1rem;
     width: 100%;
@@ -284,10 +298,36 @@ button:hover {
     gap: 8px;
 }
 
-.task-div.completed {
+/* .task-div.completed {
     background-color: #e3e3e3;
     text-decoration: line-through;
     opacity: 0.75;
+}
+
+.task-div.completed button {
+    text-decoration: none;
+} */
+
+/* Remove this from .task-div.completed */
+.task-div.completed {
+    background-color: #e3e3e3;
+}
+
+.task-div.completed .task-text {
+    opacity: 0.75;
+}
+
+/* Apply the strike-through only to text elements */
+.task-div.completed .task-title,
+.task-div.completed .task-desc,
+.task-div.completed .task-due-date,
+.task-div.completed .task-priority,
+.task-div.completed .edit-btn {
+    text-decoration: line-through;
+}
+
+.task-div.completed .complete-btn {
+    background-color: var(--accent);
 }
 
 .task-inputs {
@@ -314,4 +354,33 @@ button:hover {
 .task-desc {
     word-wrap: break-word;
     overflow-wrap: break-word;
+}
+
+.toast {
+    font-size: 1.3rem;
+    position: fixed;
+    bottom: 5%;
+    right: 2%;
+    background: var(--alarm-red);
+    color: white;
+    padding: 10px 16px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none; /* clicks will pass through */
+}
+
+.toast.show {
+    opacity: 1;
+}
+
+.past-due {
+    color: var(--alarm-red);
+    font-weight: 700;
+}
+
+textarea.task-inputs {
+    resize: vertical;
+    max-height: 20rem;
 }

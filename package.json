@@ -10,6 +10,7 @@
     "scripts": {
         "dev": "webpack serve --open --config webpack.dev.js",
         "build": "webpack --config webpack.prod.js",
+        "predeploy": "npm run build && git add dist -f && git commit -m 'Update site'",
         "deploy": "git subtree push --prefix dist origin gh-pages"
     },
     "dependencies": {

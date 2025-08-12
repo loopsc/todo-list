@@ -1,6 +1,12 @@
 import { Task } from "../task";
 import { saveProjects } from "../storage";
-import { isBefore, parseISO, startOfToday } from "date-fns";
+import {
+    isBefore,
+    parseISO,
+    startOfToday,
+    startOfYesterday,
+    isAfter,
+} from "date-fns";
 
 /**
  *
@@ -20,18 +26,27 @@ export default function createTaskCard(task) {
 
     const title = document.createElement("p");
     title.classList.add("task-title");
-    title.textContent = `Title: ${task.title}`;
+    title.classList.add("task-text");
+    title.textContent = `${task.title}`;
 
     const desc = document.createElement("p");
     desc.classList.add("task-desc");
+    desc.classList.add("task-text");
     desc.textContent = task.desc;
 
     const due = document.createElement("p");
     due.classList.add("task-due-date");
+    due.classList.add("task-text");
     due.textContent = `Due: ${task.dueDate}`;
+    if (isBefore(parseISO(task.dueDate), startOfToday())) {
+        due.classList.add("past-due");
+    } else {
+        due.classList.remove("past-due");
+    }
 
     const prio = document.createElement("p");
     prio.classList.add("task-priority");
+    prio.classList.add("task-text");
     prio.textContent = `Priority: ${task.prio}`;
 
     // Input fields
@@ -93,6 +108,9 @@ export default function createTaskCard(task) {
     const completeButton = document.createElement("button");
     completeButton.textContent = "Complete";
     completeButton.classList.add("complete-btn");
+    task.isComplete
+        ? completeButton.classList.add("toggle-complete-btn")
+        : completeButton.classList.remove("toggle-complete-btn");
 
     const deleteButton = document.createElement("button");
     deleteButton.textContent = "Delete";
@@ -153,13 +171,19 @@ export default function createTaskCard(task) {
         task.desc = descInput.value;
         if (!isBefore(parseISO(dueInput.value), startOfToday())) {
             task.dueDate = dueInput.value;
+            if (isBefore(parseISO(task.dueDate), startOfToday())) {
+                due.classList.add("past-due");
+            } else {
+                due.classList.remove("past-due");
+            }
         } else {
-            alert("Cannot choose a date in the past");
+            showToast("ALERT: The due date is past");
+            // alert("Cannot choose a date in the past");
         }
 
         task.prio = prioInput.value;
 
-        title.textContent = `Title: ${task.title}`;
+        title.textContent = `${task.title}`;
         desc.textContent = task.desc;
         due.textContent = `Due: ${task.dueDate}`;
         prio.textContent = `Priority: ${task.prio}`;
@@ -200,9 +224,13 @@ export default function createTaskCard(task) {
 
         if (task.isComplete) {
             card.classList.add("completed");
+            completeButton.textContent = "Completed";
             editButton.disabled = true;
+            // editButton.style.backgroundColor
         } else {
             card.classList.remove("completed");
+            completeButton.classList.remove("toggle-compelte-btn");
+            completeButton.textContent = "Complete";
             editButton.disabled = false;
         }
 
@@ -239,4 +267,18 @@ function showPriorityIndicator(priority, corner) {
             corner.style.borderTopColor = "red";
             break;
     }
+}
+
+function showToast(message) {
+    let toast = document.createElement("div");
+    toast.className = "toast";
+    toast.textContent = message;
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => toast.classList.add("show"));
+
+    setTimeout(() => {
+        toast.classList.remove("show");
+        setTimeout(() => toast.remove(), 300); // match the fade-out duration
+    }, 3000); // visible for 3 seconds
 }

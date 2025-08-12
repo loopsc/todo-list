@@ -81,7 +81,7 @@ export default function editProjectDialog(project) {
                 list.removeProject(list.activeProject);
                 saveProjects();
                 // Return user to the default project when a project is deleted
-                list.activeProject = list.defaultProject;
+                // list.activeProject = list.defaultProject;
 
                 handleFormClose(form, dialog);
                 resolve();
