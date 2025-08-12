@@ -84,7 +84,7 @@ export default function editProjectDialog(project) {
                 // list.activeProject = list.defaultProject;
 
                 handleFormClose(form, dialog);
-                resolve();
+                resolve(true);
             }
         });
 

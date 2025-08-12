@@ -43,7 +43,7 @@ body {
     overflow-y: auto;
     min-height: 0;
     flex-shrink: 1;
-    min-width: 0;
+    max-width: 15%;
 }
 
 .projects-list {
@@ -74,6 +74,8 @@ button:hover {
 .projects-button {
     background-color: var(--saturated-teal);
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
+    text-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 /* .new-task-button {
