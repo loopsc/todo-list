@@ -42,6 +42,8 @@ body {
     min-width: 250px;
     overflow-y: auto;
     min-height: 0;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .projects-list {
@@ -74,11 +76,37 @@ button:hover {
     text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.7);
 }
 
-.new-task-button {
+/* .new-task-button {
     align-self: flex-start;
     position: absolute;
     left: 2rem;
     top: 1rem;
+} */
+
+.new-task-button {
+    position: absolute;
+    left: 2rem;
+    top: 1rem;
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 800px) {
+    .new-task-button {
+        color: transparent;
+        padding: 0.2rem;
+        width: 3rem;
+        height: 3rem;
+    }
+
+    .new-task-button::after {
+        content: "+";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        color: white; /* or your button text color */
+        font-size: 1.5rem;
+    }
 }
 
 .edit-project-button {
@@ -97,7 +125,6 @@ button:hover {
 
 .new-project-button {
     background-color: var(--accent);
-    
 }
 
 .content {
@@ -199,7 +226,7 @@ button:hover {
     background-color: var(--cool-gray);
 }
 
-.dialog {
+/* .dialog {
     background-color: white;
     padding: 32px;
     border-radius: var(--radius);
@@ -214,6 +241,15 @@ button:hover {
     width: 90%;
     margin: 0;
     animation: fadeIn 0.25s ease-in-out;
+} */
+
+.dialog {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: auto;
 }
 
 @keyframes fadeIn {
